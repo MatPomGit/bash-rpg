@@ -87,6 +87,37 @@ level_01_encounter3() {
     combat_start
 }
 
+level_01_midpoint() {
+    ui_story "Stary pustelnik pojawia się zza drzewa, kiwając głową z uznaniem."
+    echo
+    ui_dialog "Pustelnik Siwobrodek" \
+        "Widzę, że radujesz sobie dobrze z podstawami! Zanim zmierzysz się z Widmem, \
+zapamiętaj: flaga '-t' sortuje pliki po czasie modyfikacji, '-R' przeszukuje \
+podkatalogi rekurencyjnie, a 'cd -' przeniesie cię z powrotem tam, gdzie byłeś. \
+Przydatne triki w każdej leśnej przygodzie!" \
+        "${BOLD_CYAN}"
+    press_enter
+}
+
+level_01_encounter4() {
+    ui_story "Gdy już myślisz, że las jest wolny, spod ziemi wyłania się Leśny Arcystrażnik!"
+    ui_story "Ten pradawny elemental zbudowany jest z samych ścieżek absolutnych i względnych."
+    sleep 1
+
+    enemy_set \
+        "Leśny Arcystrażnik" \
+        95 \
+        17 \
+        "navigation" \
+        "Pradawny duch lasu tkany ze ścieżek absolutnych i względnych. Testuje tylko tych, którzy naprawdę opanowali nawigację – nie oszczędza słabych." \
+        "Arcystrażnik kiwa z szacunkiem. 'Godny jesteś przejść przez Las Nawigacji' – szepczą drzewa. Skryta skrzynka ze złotem leży u twoich stóp!" \
+        95 \
+        30 \
+        ""
+
+    combat_start
+}
+
 level_01_complete() {
     ui_clear
     ui_header "Las Nawigacji – Pokonany!"
@@ -120,7 +151,11 @@ run_level_01() {
         level_01_encounter2 || true
     fi
     if ! player_is_dead; then
+        level_01_midpoint
         level_01_encounter3 || true
+    fi
+    if ! player_is_dead; then
+        level_01_encounter4 || true
     fi
     if ! player_is_dead; then
         level_01_complete

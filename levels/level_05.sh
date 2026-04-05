@@ -88,6 +88,38 @@ level_05_encounter3() {
     combat_start
 }
 
+level_05_midpoint() {
+    ui_story "Wielki Czarodziej Bourne pojawia się w powiriu kodu na chwilę odpoczynku."
+    echo
+    ui_dialog "Wielki Czarodziej Bourne" \
+        "Dobra robota do tej pory! Ale Konstrukt Warunków to dopiero prolog. \
+Za nim ukrywają się jeszcze silniejsi przeciwnicy. Przypomnij sobie: \
+'\$1', '\$@' i '\$#' to klucze do argumentów skryptów. \
+'case' jest elegantszy od długich if-elif. \
+A tablice 'arr=()' to struktury danych, które otwierają nowe możliwości!" \
+        "${BOLD_CYAN}"
+    press_enter
+}
+
+level_05_encounter4() {
+    ui_story "Spod Laski Skryptów wyłania się cień... Arcymag Kodu się przebudza!"
+    ui_story "Napisał pierwsze skrypty powłoki. Pamięta czasy przed bash, kiedy był tylko sh."
+    sleep 1
+
+    enemy_set \
+        "Arcymag Kodu" \
+        165 \
+        27 \
+        "scripting" \
+        "Legendarny czarodziej, który napisał pierwszy skrypt powłoki. Jego moc pochodzi z dekad doświadczenia w skryptowaniu. Zna każdą zmienną specjalną, każdy operator i każdą pułapkę." \
+        "Arcymag kiwa głową w milczeniu. Potem przemawia: 'Masz duszę skryptowacza. Wyjdź i twórz!' Wręcza ci Rodowód Bourne'a – dowód twojego mistrzostwa." \
+        165 \
+        55 \
+        ""
+
+    combat_start
+}
+
 level_05_complete() {
     ui_clear
     ui_header "Wieża Czarodzieja – Zdobyta!"
@@ -125,7 +157,11 @@ run_level_05() {
         level_05_encounter2 || true
     fi
     if ! player_is_dead; then
+        level_05_midpoint
         level_05_encounter3 || true
+    fi
+    if ! player_is_dead; then
+        level_05_encounter4 || true
     fi
     if ! player_is_dead; then
         level_05_complete

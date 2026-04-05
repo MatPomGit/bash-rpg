@@ -91,10 +91,22 @@ assert_true "tail last lines"  'challenges_check_answer "tail" "tail"'
 assert_true "wc counts"        'challenges_check_answer "wc"   "wc"'
 assert_true "sort orders"      'challenges_check_answer "sort" "sort"'
 
+# ── verify new text processing answers ────────────────────────────
+assert_true "sed stream editor"  'challenges_check_answer "sed"   "sed"'
+assert_true "awk field processor" 'challenges_check_answer "awk"  "awk"'
+assert_true "tr translates chars" 'challenges_check_answer "tr"   "tr"'
+assert_true "paste merges files"  'challenges_check_answer "paste" "paste"'
+assert_true "sort -n numeric"     'challenges_check_answer "-n"   "-n§sort -n"'
+
 # ── verify pipe operators ──────────────────────────────────────────
 assert_true "pipe symbol"         'challenges_check_answer "|"  "|§pipe"'
 assert_true "redirect overwrite"  'challenges_check_answer ">"  ">"'
 assert_true "redirect append"     'challenges_check_answer ">>" ">>"'
+
+# ── verify new pipe operators ──────────────────────────────────────
+assert_true "AND operator"        'challenges_check_answer "&&" "&&"'
+assert_true "OR operator"         'challenges_check_answer "||" "||"'
+assert_true "background ampersand" 'challenges_check_answer "&" "&§polecenie &"'
 
 # ── verify scripting answers ───────────────────────────────────────
 assert_true "'if' keyword"     'challenges_check_answer "if"    "if"'
@@ -102,6 +114,10 @@ assert_true "'fi' keyword"     'challenges_check_answer "fi"    "fi"'
 assert_true "'for' keyword"    'challenges_check_answer "for"   "for"'
 assert_true "'while' keyword"  'challenges_check_answer "while" "while"'
 
+# ── verify new scripting answers ──────────────────────────────────
+assert_true "'case' keyword"      'challenges_check_answer "case"  "case"'
+assert_true "'\$#' arg count"     'challenges_check_answer "\$#"   "\$#"'
+assert_true "'\$1' first arg"     'challenges_check_answer "\$1"   "\$1"'
 
 # ── verify process management answers ─────────────────────────────
 assert_true "'ps' lists processes"   'challenges_check_answer "ps"    "ps"'
@@ -111,6 +127,26 @@ assert_true "'bg' background"        'challenges_check_answer "bg"    "bg"'
 assert_true "'fg' foreground"        'challenges_check_answer "fg"    "fg"'
 assert_true "'jobs' shows jobs"      'challenges_check_answer "jobs"  "jobs"'
 assert_true "'nohup' no hangup"      'challenges_check_answer "nohup" "nohup"'
+
+# ── verify new process management answers ─────────────────────────
+assert_true "'pkill' kills by name"  'challenges_check_answer "pkill" "pkill"'
+assert_true "'wait' waits for child" 'challenges_check_answer "wait"  "wait"'
+assert_true "'nice' lowers priority" 'challenges_check_answer "nice"  "nice"'
+assert_true "SIGKILL signal 9"       'challenges_check_answer "9"     "9§SIGKILL§-9§kill -9"'
+
+# ── verify new navigation answers ─────────────────────────────────
+assert_true "ls -t sorts by time"   'challenges_check_answer "-t"   "-t§ls -t"'
+assert_true "mkdir -p parents"      'challenges_check_answer "-p"   "-p§mkdir -p"'
+assert_true "ls -R recursive"       'challenges_check_answer "-R"   "-R§ls -R"'
+assert_true "realpath absolute"     'challenges_check_answer "realpath" "realpath§readlink -f§readlink"'
+assert_true "cd - previous dir"     'challenges_check_answer "cd -" "cd -§-"'
+
+# ── verify new file management answers ────────────────────────────
+assert_true "stat file metadata"    'challenges_check_answer "stat"  "stat"'
+assert_true "chmod changes mode"    'challenges_check_answer "chmod" "chmod"'
+assert_true "diff compares files"   'challenges_check_answer "diff"  "diff"'
+assert_true "less is a pager"       'challenges_check_answer "less"  "less§more"'
+assert_true "chown changes owner"   'challenges_check_answer "chown" "chown"'
 
 # ── challenges_get_random: processes ──────────────────────────────
 challenges_get_random "processes" ""

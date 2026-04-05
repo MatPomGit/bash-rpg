@@ -88,6 +88,37 @@ level_02_encounter3() {
     combat_start
 }
 
+level_02_midpoint() {
+    ui_story "Archiwista Pergamin wyłania się zza stalaktytu, trzymając stary zwój."
+    echo
+    ui_dialog "Archiwista Pergamin" \
+        "Uwaga, wędrowcze! Zanim zmierzysz się z Archiwalnym Elementalem, przypomnij sobie: \
+'stat' zdradzi ci każdy sekret pliku – rozmiar, uprawnienia, daty. \
+'diff' pokaże co zmieniło się między dwoma wersjami. \
+'chmod +x' doda bit wykonywalności. Wiedza ta może uratować ci życie!" \
+        "${BOLD_CYAN}"
+    press_enter
+}
+
+level_02_encounter4() {
+    ui_story "Z głębin jaskini wypełza coś czego się nie spodziewałeś – Golem Danych!"
+    ui_story "Jego ciało skute jest z twardych dowiązań i metadanych plików systemu."
+    sleep 1
+
+    enemy_set \
+        "Golem Danych" \
+        115 \
+        20 \
+        "files" \
+        "Masywny konstrukt z twardych dowiązań i metadanych. Każde jego uderzenie zmienia uprawnienia i atrybuty. Tylko mistrz plików może go pokonać." \
+        "Golem kruszy się na kupę zwykłych plików. Wśród nich błyszczy Klucz Dostępu – rzadki łup ze skarbca jaskini!" \
+        115 \
+        35 \
+        ""
+
+    combat_start
+}
+
 level_02_complete() {
     ui_clear
     ui_header "Jaskinia Plików – Oczyszczona!"
@@ -124,7 +155,11 @@ run_level_02() {
         level_02_encounter2 || true
     fi
     if ! player_is_dead; then
+        level_02_midpoint
         level_02_encounter3 || true
+    fi
+    if ! player_is_dead; then
+        level_02_encounter4 || true
     fi
     if ! player_is_dead; then
         level_02_complete

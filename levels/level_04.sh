@@ -88,6 +88,37 @@ level_04_encounter3() {
     combat_start
 }
 
+level_04_midpoint() {
+    ui_story "Przewoźnik Przekierowanie dobija do brzegu z wiosłem i zatrzymuje się przy tobie."
+    echo
+    ui_dialog "Przewoźnik Przekierowanie" \
+        "Miej się na baczności! Za Kałamarnicą czeka coś gorszego. \
+Pamiętaj o operatorach '&&' i '||' – łańcuchują polecenia logicznie. \
+Subshell '()' izoluje środowisko. A heredoc '<<EOF' wpycha tekst \
+prosto do polecenia. To są broń wyższego rzędu w walce z potokami!" \
+        "${BOLD_CYAN}"
+    press_enter
+}
+
+level_04_encounter4() {
+    ui_story "Rzeka wzbiera. Z jej środka wyłania się Hydrora Przekierowań!"
+    ui_story "Każda z siedmiu głów reprezentuje inny operator przekierowania."
+    sleep 1
+
+    enemy_set \
+        "Hydra Przekierowań" \
+        145 \
+        24 \
+        "pipes" \
+        "Mityczny potwór z siedmioma głowami – każda to inny operator: |, >, >>, <, 2>, &&, ||. Odetnij jedną głowę, wyrosną dwie. Tylko kompletna wiedza o przekierowaniach może ją pokonać." \
+        "Wszystkie głowy Hydry opadają jednocześnie, gdy demonstrujesz pełne mistrzostwo potoków. Rzeka rozlewa się ze złota i Kamień Potoków ląduje w twoich rękach!" \
+        145 \
+        45 \
+        ""
+
+    combat_start
+}
+
 level_04_complete() {
     ui_clear
     ui_header "Rzeka Potoków – Przeprawiona!"
@@ -125,7 +156,11 @@ run_level_04() {
         level_04_encounter2 || true
     fi
     if ! player_is_dead; then
+        level_04_midpoint
         level_04_encounter3 || true
+    fi
+    if ! player_is_dead; then
+        level_04_encounter4 || true
     fi
     if ! player_is_dead; then
         level_04_complete
