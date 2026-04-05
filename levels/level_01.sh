@@ -151,7 +151,7 @@ level_01_midpoint() {
 zapamiętaj: flaga '-l' przy 'ls' pokaże ci szczegółowe uprawnienia pliku. \
 Flaga '-t' sortuje pliki po czasie modyfikacji, '-R' przeszukuje \
 podkatalogi rekurencyjnie, a 'cd -' przeniesie cię z powrotem tam, gdzie byłeś. \
-Widmo nawigacji żywi się twoimnietradycyjnie – zmusza cię do wykonywania \
+Widmo nawigacji żywi się twoim strachem – zmusza cię do wykonywania \
 poleceń pod presją. Pamiętaj o tych sztuczkach!" \
         "${BOLD_CYAN}"
     press_enter

@@ -138,7 +138,7 @@ level_05_encounter3() {
 }
 
 level_05_midpoint() {
-    ui_story "Czarodziej Bourne materializuje się w wiro kodu, siadając na kryształowym kamieniu."
+    ui_story "Czarodziej Bourne materializuje się w wirze kodu, siadając na kryształowym kamieniu."
     echo
     ui_dialog "Wielki Czarodziej Bourne" \
         "Dobra robota do tej pory! Ale Konstrukt Warunków to dopiero prolog. \
