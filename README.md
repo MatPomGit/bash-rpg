@@ -28,28 +28,146 @@ You are the **Bash Warrior** – destined to save the Kingdom of Terminal from c
 ## Requirements
 
 - **Bash 4.0+** (macOS users: `brew install bash`)
+- **Git** – to clone the repository
 - A terminal with ANSI color support (any modern terminal)
 
 ## How to Run
 
-### Terminal (Linux / macOS / Windows with Git Bash)
+Choose the section that matches your operating system and follow the steps in order.
 
-```bash
-git clone https://github.com/MatPomGit/bash-rpg.git
-cd bash-rpg
-bash bash_rpg.sh
-```
+---
 
-### Double-click launcher
+### 🐧 Linux
 
-| System  | File            | What you need |
-|---------|-----------------|---------------|
-| Windows | `start.bat`     | [Git for Windows](https://gitforwindows.org/), [WSL](https://learn.microsoft.com/windows/wsl/install), [Cygwin](https://www.cygwin.com/), or [MSYS2](https://www.msys2.org/) |
-| macOS   | `start.command` | Bash 4+ (`brew install bash`) |
+Most Linux distributions ship with Bash 4+ and Git pre-installed.
 
-**Windows** – double-click `start.bat`. It searches for Git Bash, then WSL, then any `bash` on your PATH. If none is found, it prints installation instructions.
+1. **Open a terminal** (e.g. GNOME Terminal, Konsole, xterm).
 
-**macOS** – double-click `start.command` in Finder. Right-click → *Open* the first time to bypass the Gatekeeper warning.
+2. **Install Git** if it is not already present:
+
+   ```bash
+   # Debian / Ubuntu / Mint
+   sudo apt install git
+
+   # Fedora / RHEL / CentOS
+   sudo dnf install git
+
+   # Arch / Manjaro
+   sudo pacman -S git
+   ```
+
+3. **Clone the repository and start the game:**
+
+   ```bash
+   git clone https://github.com/MatPomGit/bash-rpg.git
+   cd bash-rpg
+   bash bash_rpg.sh
+   ```
+
+---
+
+### 🍎 macOS
+
+macOS ships with Bash **3.2**, which is too old. You need to install Bash 4+ via [Homebrew](https://brew.sh).
+
+1. **Install Homebrew** (skip if already installed):
+
+   ```bash
+   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+   ```
+
+2. **Install Git and Bash 4+:**
+
+   ```bash
+   brew install git bash
+   ```
+
+3. **Clone the repository and start the game:**
+
+   ```bash
+   git clone https://github.com/MatPomGit/bash-rpg.git
+   cd bash-rpg
+   bash bash_rpg.sh
+   ```
+
+   > **Tip:** You can also double-click `start.command` in Finder. The first time, right-click → *Open* to bypass the Gatekeeper warning.
+
+---
+
+### 🪟 Windows
+
+Windows does not include Bash natively. Choose **one** of the options below.
+
+#### Option A – Git for Windows (recommended, easiest)
+
+1. **Download and install** [Git for Windows](https://gitforwindows.org/).  
+   During setup you can keep all default options.
+
+2. **Open Git Bash** (search for "Git Bash" in the Start menu).
+
+3. **Clone the repository and start the game:**
+
+   ```bash
+   git clone https://github.com/MatPomGit/bash-rpg.git
+   cd bash-rpg
+   bash bash_rpg.sh
+   ```
+
+   > **Tip:** You can also double-click `start.bat` in Explorer. It automatically finds Git Bash and launches the game.
+
+#### Option B – WSL (Windows Subsystem for Linux)
+
+1. **Enable WSL** (run in PowerShell as Administrator):
+
+   ```powershell
+   wsl --install
+   ```
+
+   Restart your computer when prompted.
+
+2. **Open the WSL terminal** (e.g. "Ubuntu" from the Start menu).
+
+3. **Clone the repository and start the game:**
+
+   ```bash
+   git clone https://github.com/MatPomGit/bash-rpg.git
+   cd bash-rpg
+   bash bash_rpg.sh
+   ```
+
+#### Option C – Cygwin
+
+1. **Download and run** the [Cygwin installer](https://www.cygwin.com/).
+
+2. During package selection, add **git** and **bash** (both are in the default selection).
+
+3. **Open the Cygwin Terminal**, then clone and run:
+
+   ```bash
+   git clone https://github.com/MatPomGit/bash-rpg.git
+   cd bash-rpg
+   bash bash_rpg.sh
+   ```
+
+#### Option D – MSYS2
+
+1. **Download and install** [MSYS2](https://www.msys2.org/).
+
+2. **Open the MSYS2 MSYS terminal** and install Git:
+
+   ```bash
+   pacman -S git
+   ```
+
+3. **Clone the repository and start the game:**
+
+   ```bash
+   git clone https://github.com/MatPomGit/bash-rpg.git
+   cd bash-rpg
+   bash bash_rpg.sh
+   ```
+
+---
 
 ## Project Structure
 
