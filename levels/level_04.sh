@@ -101,7 +101,7 @@ prosto do polecenia. To są broń wyższego rzędu w walce z potokami!" \
 }
 
 level_04_encounter4() {
-    ui_story "Rzeka wzbiera. Z jej środka wyłania się Hydrora Przekierowań!"
+    ui_story "Rzeka wzbiera. Z jej środka wyłania się Hydra Przekierowań!"
     ui_story "Każda z siedmiu głów reprezentuje inny operator przekierowania."
     sleep 1
 
