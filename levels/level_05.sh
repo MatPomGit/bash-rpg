@@ -64,7 +64,7 @@ level_05_encounter2() {
         "Przerywasz nieskończoną pętlę licha dobrze umieszczoną instrukcją 'break'. W końcu odpoczywa." \
         120 \
         35 \
-        "Mikstura Zdrowia"
+        "Mikstura zdrowia"
 
     combat_start
 }

@@ -8,6 +8,41 @@ source "${SCRIPT_DIR}/colors.sh"
 TERM_WIDTH=78
 
 # ──────────────────────────────────────────────────────────────────────────────
+# Terminal window management
+# ──────────────────────────────────────────────────────────────────────────────
+
+# Attempt to resize the terminal window to half the screen height, full width.
+# Works only in xterm-compatible terminals; silently ignored elsewhere.
+ui_resize_half_screen() {
+    [[ "${BASH_RPG_TESTING:-}" == "1" ]] && return 0
+    [[ -t 1 ]] || return 0
+    # Query full screen size via xrandr or fallback to common defaults
+    local screen_rows screen_cols
+    if command -v xrandr &>/dev/null; then
+        local res
+        res=$(xrandr 2>/dev/null | awk '/\*/ {print $1; exit}')
+        if [[ "$res" =~ ^([0-9]+)x([0-9]+)$ ]]; then
+            local px_w=${BASH_REMATCH[1]}
+            local px_h=${BASH_REMATCH[2]}
+            # Approximate character cell size: 9×18 px (varies by font/terminal)
+            screen_cols=$(( px_w / 9 ))
+            screen_rows=$(( px_h / 18 / 2 ))
+        fi
+    fi
+    # Fallback: use 40 rows, 160 columns as a reasonable half-screen size
+    screen_rows="${screen_rows:-40}"
+    screen_cols="${screen_cols:-160}"
+    # Clamp to sane bounds to guard against unexpected xrandr output
+    [[ $screen_rows -lt 10 ]] && screen_rows=10
+    [[ $screen_rows -gt 500 ]] && screen_rows=500
+    [[ $screen_cols -lt 40 ]] && screen_cols=40
+    [[ $screen_cols -gt 1000 ]] && screen_cols=1000
+    # xterm resize escape sequence
+    printf '\033[8;%d;%dt' "$screen_rows" "$screen_cols"
+    TERM_WIDTH=$(( screen_cols < 160 ? screen_cols : 160 ))
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
 # Basic primitives
 # ──────────────────────────────────────────────────────────────────────────────
 
@@ -191,7 +226,7 @@ ui_level_up() {
     local level="$1"
     echo
     ui_hr "★"
-    ui_center "${BOLD_YELLOW}★  AWANS NA POZIOM! Osiągnąłeś Poziom ${level}!  ★${RESET}"
+    ui_center "${BOLD_YELLOW}★  Awans na poziom! Osiągnąłeś poziom ${level}!  ★${RESET}"
     ui_hr "★"
     echo
 }
@@ -233,7 +268,7 @@ ui_combat_banner() {
     local enemy_name="$1"
     echo
     printf "%b" "${BOLD_RED}"
-    ui_center "⚔  WALKA: ${enemy_name}  ⚔"
+    ui_center "⚔  Walka: ${enemy_name}  ⚔"
     printf "%b" "${RESET}"
     echo
 }
@@ -248,4 +283,48 @@ ui_typewrite() {
         sleep "$delay"
     done
     printf "%b\n" "${RESET}"
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Animations
+# ──────────────────────────────────────────────────────────────────────────────
+
+# Startup loading animation shown before the main menu
+ui_startup_animation() {
+    [[ "${BASH_RPG_TESTING:-}" == "1" ]] && return 0
+    ui_clear
+    echo
+    local frames=("⠋" "⠙" "⠹" "⠸" "⠼" "⠴" "⠦" "⠧" "⠇" "⠏")
+    local msgs=(
+        "Ładowanie kronik..."
+        "Budzenie starożytnych sił..."
+        "Kalibrowanie terminala..."
+        "Przygotowywanie wyzwań..."
+        "Gotowe!"
+    )
+    for msg in "${msgs[@]}"; do
+        printf "\r  "
+        for (( spin=0; spin<8; spin++ )); do
+            printf "\r  %b%s%b  %s  " "${BOLD_CYAN}" "${frames[spin % ${#frames[@]}]}" "${RESET}" "$msg"
+            sleep 0.07
+        done
+    done
+    printf "\r%*s\r" "$TERM_WIDTH" ""   # clear line
+    sleep 0.2
+}
+
+# Brief animation shown when combat begins
+ui_combat_start_animation() {
+    [[ "${BASH_RPG_TESTING:-}" == "1" ]] && return 0
+    local enemy_name="$1"
+    local sword_frames=("⚔  " " ⚔ " "  ⚔")
+    echo
+    for (( i=0; i<6; i++ )); do
+        local frame="${sword_frames[i % ${#sword_frames[@]}]}"
+        printf "\r  %b%s  Walka: %s  %s%b" \
+            "${BOLD_RED}" "$frame" "$enemy_name" "$frame" "${RESET}"
+        sleep 0.15
+    done
+    printf "\r%*s\r" "$TERM_WIDTH" ""   # clear line
+    echo
 }

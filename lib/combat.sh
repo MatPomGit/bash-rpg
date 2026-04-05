@@ -55,6 +55,8 @@ combat_start() {
     echo
     press_enter
 
+    ui_combat_start_animation "$ENEMY_NAME"
+
     while true; do
         # Draw status
         ui_clear
@@ -142,7 +144,7 @@ combat_player_attack() {
 
     echo
     ui_hr "─"
-    printf "  %b⚔  WYZWANIE:%b\n" "${BOLD_YELLOW}" "${RESET}"
+    printf "  %b⚔  Wyzwanie:%b\n" "${BOLD_YELLOW}" "${RESET}"
     printf "  %b%s%b\n\n" "${BOLD_WHITE}" "$CHALLENGE_QUESTION" "${RESET}"
     ui_prompt "Twoja odpowiedź: "
     local answer
@@ -163,7 +165,7 @@ combat_player_attack() {
             "$(echo "$CHALLENGE_ANSWERS" | cut -d"${SEP}" -f1)" "${RESET}"
         printf "  %b%s%b\n" "${DIM}" "$CHALLENGE_EXPLAIN" "${RESET}"
         printf "  %bTracisz kolejkę!%b\n" "${COLOR_WARNING}" "${RESET}"
-        sleep 1
+        press_enter
         return 1
     fi
 }
@@ -202,7 +204,7 @@ combat_use_item() {
 combat_victory() {
     echo
     ui_hr "═"
-    ui_center "${COLOR_SUCCESS}  ★  ZWYCIĘSTWO!  ★  ${RESET}"
+    ui_center "${COLOR_SUCCESS}  ★  Zwycięstwo!  ★  ${RESET}"
     ui_hr "═"
     echo
     printf "  %b%s%b\n\n" "${COLOR_STORY}" "$ENEMY_VICTORY_MSG" "${RESET}"
@@ -221,7 +223,7 @@ combat_victory() {
 combat_defeat() {
     echo
     ui_hr "═"
-    ui_center "${COLOR_ERROR}  ✝  POLEGŁEŚ  ✝  ${RESET}"
+    ui_center "${COLOR_ERROR}  ✝  Poległeś  ✝  ${RESET}"
     ui_hr "═"
     echo
     printf "  %bTwoja przygoda kończy się tutaj... na razie.%b\n" "${COLOR_STORY}" "${RESET}"

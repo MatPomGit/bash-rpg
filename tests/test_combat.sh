@@ -39,7 +39,7 @@ echo
 echo "  === Combat Tests ==="
 
 # ── enemy_set ─────────────────────────────────────────────────────
-enemy_set "Test Slime" 50 8 "navigation" "A test enemy." "Defeated!" 30 10 "Mikstura Zdrowia"
+enemy_set "Test Slime" 50 8 "navigation" "A test enemy." "Defeated!" 30 10 "Mikstura zdrowia"
 assert_eq "enemy name"        "Test Slime"   "$ENEMY_NAME"
 assert_eq "enemy HP"          "50"           "$ENEMY_HP"
 assert_eq "enemy max HP"      "50"           "$ENEMY_MAX_HP"
@@ -47,7 +47,7 @@ assert_eq "enemy attack"      "8"            "$ENEMY_ATTACK"
 assert_eq "enemy category"    "navigation"   "$ENEMY_CATEGORY"
 assert_eq "enemy XP reward"   "30"           "$ENEMY_XP_REWARD"
 assert_eq "enemy gold reward" "10"           "$ENEMY_GOLD_REWARD"
-assert_eq "nagroda przedmiotu wroga" "Mikstura Zdrowia" "$ENEMY_ITEM_REWARD"
+assert_eq "nagroda przedmiotu wroga" "Mikstura zdrowia" "$ENEMY_ITEM_REWARD"
 
 # ── enemy_set without item reward ─────────────────────────────────
 enemy_set "No-loot Ghost" 20 5 "files" "Description." "Victory!" 15 5
@@ -66,12 +66,12 @@ assert_true "HP still positive after one hit" '[[ $PLAYER_HP -gt 0 ]]'
 
 # ── combat_victory awards XP and Gold ─────────────────────────────
 player_create "RewardHero"
-enemy_set "Reward Dummy" 0 0 "navigation" "" "You win!" 50 25 "Mikstura Zdrowia"
+enemy_set "Reward Dummy" 0 0 "navigation" "" "You win!" 50 25 "Mikstura zdrowia"
 ENEMY_HP=0
 combat_victory > /dev/null
 assert_eq "XP awarded after victory" "50" "$PLAYER_XP"
 assert_eq "Gold awarded after victory" "25" "$PLAYER_GOLD"
-assert_true "przedmiot po zwycięstwie" 'player_has_item "Mikstura Zdrowia"'
+assert_true "przedmiot po zwycięstwie" 'player_has_item "Mikstura zdrowia"'
 
 # ── victory with no item reward ────────────────────────────────────
 player_create "NoItemHero"

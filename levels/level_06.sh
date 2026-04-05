@@ -45,7 +45,7 @@ level_06_encounter1() {
         "Zombie procesów w końcu zostaje zebrany przez init. Lista procesów jest czysta!" \
         110 \
         35 \
-        "Mikstura Zdrowia"
+        "Mikstura zdrowia"
 
     combat_start
 }
@@ -64,7 +64,7 @@ level_06_encounter2() {
         "Osierocone procesy zostają przejęte przez init i właściwie zakończone. Demon disparu!" \
         130 \
         40 \
-        "Eliksir Wiedzy"
+        "Eliksir wiedzy"
 
     combat_start
 }

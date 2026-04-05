@@ -64,7 +64,7 @@ level_04_encounter2() {
         "Wąż jest zmuszony dołączać zamiast nadpisywać i wycofuje się ze wstydem." \
         90 \
         30 \
-        "Mikstura Zdrowia"
+        "Mikstura zdrowia"
 
     combat_start
 }

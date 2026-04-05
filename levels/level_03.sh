@@ -65,7 +65,7 @@ level_03_encounter2() {
         "Pomagasz demonowi znaleźć jego plik konfiguracyjny za pomocą 'find'. Spokojnieje i odchodzi." \
         75 \
         25 \
-        "Mikstura Zdrowia"
+        "Mikstura zdrowia"
 
     combat_start
 }
