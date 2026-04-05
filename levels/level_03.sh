@@ -89,6 +89,37 @@ level_03_encounter3() {
     combat_start
 }
 
+level_03_midpoint() {
+    ui_story "Uczony Regex siada obok ciebie, rozkładając zwój pełen wzorców."
+    echo
+    ui_dialog "Uczony Regex" \
+        "Słuchaj uważnie! Gdy staniesz przed Wiwerną, pamiętaj o mocy 'sed' – \
+edytora strumieniowego, który transformuje tekst w locie. 'awk' zaś potrafi \
+przetwarzać dane kolumnami. A 'tr' zamieni litery wielkie na małe jednym \
+ruchem. To połączenie jest potężniejsze niż jakakolwiek broń!" \
+        "${BOLD_CYAN}"
+    press_enter
+}
+
+level_03_encounter4() {
+    ui_story "Za ołtarzem świątyni budzi się coś starszego od samego grep'a..."
+    ui_story "Wyrocznia Wzorców otwiera tysiąc oczu – każde widzi inny wzorzec regularny."
+    sleep 1
+
+    enemy_set \
+        "Wyrocznia Wzorców" \
+        125 \
+        22 \
+        "text" \
+        "Pradawna wyrocznia utkana z wyrażeń regularnych i transformacji tekstu. Widzi wszystkie wzorce i potrafi je wszystkie zastosować jednocześnie. Tylko mistrz przetwarzania tekstu może ją pokonać." \
+        "Wyrocznia zamyka swoje oczy z szacunkiem. 'Przewiduję wielką przyszłość dla ciebie w krainie terminala' – mówi, zostawiając Zwój Mądrości Tekstu." \
+        125 \
+        40 \
+        ""
+
+    combat_start
+}
+
 level_03_complete() {
     ui_clear
     ui_header "Świątynia Tekstu – Wyzwolona!"
@@ -126,7 +157,11 @@ run_level_03() {
         level_03_encounter2 || true
     fi
     if ! player_is_dead; then
+        level_03_midpoint
         level_03_encounter3 || true
+    fi
+    if ! player_is_dead; then
+        level_03_encounter4 || true
     fi
     if ! player_is_dead; then
         level_03_complete

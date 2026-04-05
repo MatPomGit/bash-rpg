@@ -88,6 +88,37 @@ level_06_encounter3() {
     combat_start
 }
 
+level_06_midpoint() {
+    ui_story "Daemon siada na kamieniu i wygładza swoją zbroję z tablic PID-ów."
+    echo
+    ui_dialog "Strażnik Procesów Daemon" \
+        "Posłuchaj zanim zaatakujesz Kolosa! 'kill -9' to ostateczna broń – \
+żaden proces jej nie przetrwa. 'pkill' uderza po nazwie zamiast PID-u. \
+'wait' wstrzyma skrypt do chwili zakończenia dziecka. \
+A 'nice' da ci kontrolę nad priorytetami. Wiedza ta jest twoją tarczą!" \
+        "${BOLD_CYAN}"
+    press_enter
+}
+
+level_06_encounter4() {
+    ui_story "Za tronem Kolosa unosi się coś niepojętego – Duch Jądra Linuksa we własnej osobie!"
+    ui_story "Jest zbudowany z milionów linii kodu źródłowego i zarządza każdym procesem w systemie."
+    sleep 1
+
+    enemy_set \
+        "Duch Jądra Linuksa" \
+        185 \
+        30 \
+        "processes" \
+        "Ostateczny strażnik systemu – manifestacja samego jądra Linuksa. Każde jego spojrzenie wysyła sygnał. Każdy ruch to wywołanie systemowe. Jego moc jest absolutna. To najcięższy egzamin wojownika Bash." \
+        "Duch Jądra skłania się nisko. 'System działa harmonijnie pod twoją opieką' – brzmi echo w cytadeli. Przekazuje ci Pierścień Root'a – symbol absolutnej władzy nad terminalem!" \
+        185 \
+        65 \
+        ""
+
+    combat_start
+}
+
 level_06_complete() {
     ui_clear
     ui_header "Cytadela Procesów – Zdobyta!"
@@ -130,7 +161,11 @@ run_level_06() {
         level_06_encounter2 || true
     fi
     if ! player_is_dead; then
+        level_06_midpoint
         level_06_encounter3 || true
+    fi
+    if ! player_is_dead; then
+        level_06_encounter4 || true
     fi
     if ! player_is_dead; then
         level_06_complete
