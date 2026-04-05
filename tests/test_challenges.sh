@@ -55,9 +55,9 @@ assert_true "navigation explain non-empty"  '[[ -n "$CHALLENGE_EXPLAIN" ]]'
 assert_true "CHALLENGE_IDX is numeric" '[[ "$CHALLENGE_IDX" =~ ^[0-9]+$ ]]'
 
 # ── challenges_get_random: all categories ─────────────────────────
-for cat in navigation files text pipes scripting; do
+for cat in navigation files text pipes scripting processes; do
     challenges_get_random "$cat" ""
-    assert_true "category $cat returns question" '[[ -n "$CHALLENGE_QUESTION" ]]'
+    assert_true "kategoria $cat zwraca pytanie" '[[ -n "$CHALLENGE_QUESTION" ]]'
 done
 
 # ── challenges_get_random: exclusion ──────────────────────────────
@@ -101,6 +101,21 @@ assert_true "'if' keyword"     'challenges_check_answer "if"    "if"'
 assert_true "'fi' keyword"     'challenges_check_answer "fi"    "fi"'
 assert_true "'for' keyword"    'challenges_check_answer "for"   "for"'
 assert_true "'while' keyword"  'challenges_check_answer "while" "while"'
+
+
+# ── verify process management answers ─────────────────────────────
+assert_true "'ps' lists processes"   'challenges_check_answer "ps"    "ps"'
+assert_true "'kill' kills process"   'challenges_check_answer "kill"  "kill"'
+assert_true "'top' shows top"        'challenges_check_answer "top"   "top"'
+assert_true "'bg' background"        'challenges_check_answer "bg"    "bg"'
+assert_true "'fg' foreground"        'challenges_check_answer "fg"    "fg"'
+assert_true "'jobs' shows jobs"      'challenges_check_answer "jobs"  "jobs"'
+assert_true "'nohup' no hangup"      'challenges_check_answer "nohup" "nohup"'
+
+# ── challenges_get_random: processes ──────────────────────────────
+challenges_get_random "processes" ""
+assert_true "processes question non-empty" '[[ -n "$CHALLENGE_QUESTION" ]]'
+assert_true "processes answer non-empty"   '[[ -n "$CHALLENGE_ANSWERS" ]]'
 
 echo
 echo "  Challenge Tests: ${PASS} passed, ${FAIL} failed"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# levels/level_03.sh – The Temple of Text
-# Teaches: grep, find, head, tail, wc, sort, uniq, cut
+# levels/level_03.sh – Świątynia Tekstu
+# Uczy: grep, find, head, tail, wc, sort, uniq, cut
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/../lib/colors.sh"
@@ -11,38 +11,39 @@ source "${SCRIPT_DIR}/../lib/save_load.sh"
 
 level_03_intro() {
     ui_clear
-    ui_header "Chapter 3 – The Temple of Text"
-    ui_story "The Ancient Temple of Text rises before you, carved from pure obsidian."
-    ui_story "Millions of lines of text flow across its walls like waterfalls."
-    ui_story "A scholar in robes bows as you approach."
+    ui_header "Rozdział 3 – Świątynia Tekstu"
+    ui_story "Przed tobą wznosi się starożytna Świątynia Tekstu, wykuta z czystego obsydianu."
+    ui_story "Miliony linii tekstu spływają po jej ścianach jak wodospady."
+    ui_story "Uczony w szatach kłania się, gdy się zbliżasz."
     echo
-    ui_dialog "Scholar Regex" \
-        "Ah, a brave soul seeks the wisdom of text processing! The temple guardians \
-wield the power of words – they can hide patterns, scramble orders, and \
-drown you in unorganized data. To defeat them, you must master 'grep' \
-to search, 'find' to locate, 'head' and 'tail' to sample, 'wc' to count, \
-'sort' to order, and 'uniq' to deduplicate. May your patterns be strong!" \
+    ui_dialog "Uczony Regex" \
+        "Ach, dzielna dusza szuka mądrości przetwarzania tekstu! Strażnicy świątyni \
+władają mocą słów – potrafią ukrywać wzorce, mieszać kolejności i \
+tonąć cię w niezorganizowanych danych. By ich pokonać, musisz opanować \
+'grep' do wyszukiwania, 'find' do lokalizowania, 'head' i 'tail' do \
+próbkowania, 'wc' do liczenia, 'sort' do porządkowania oraz 'uniq' \
+do deduplikacji. Oby twoje wzorce były silne!" \
         "${BOLD_WHITE}"
     press_enter
 
-    ui_story "Three ancient guardians defend the Temple of Text."
-    ui_story "Face them to unlock the Secrets of Pattern Matching."
+    ui_story "Trzech starożytnych strażników broni Świątyni Tekstu."
+    ui_story "Zmierz się z nimi, by odblokować Sekrety Dopasowywania Wzorców."
     echo
     press_enter
 }
 
 level_03_encounter1() {
-    ui_story "A Pattern Specter rises from the glowing text on the floor..."
-    ui_story "It hides inside logs and mocks those who cannot find it."
+    ui_story "Z rozświetlonego tekstu na podłodze wyłania się Wzorcowe Widmo..."
+    ui_story "Ukrywa się w logach i kpi z tych, którzy nie mogą go znaleźć."
     sleep 1
 
     enemy_set \
-        "Pattern Specter" \
+        "Wzorcowe Widmo" \
         60 \
         12 \
         "text" \
-        "A ghost made entirely of regular expressions. It shifts its appearance to confuse pattern-matchers." \
-        "The specter's pattern is broken. It dissolves into plain ASCII." \
+        "Duch zbudowany w całości z wyrażeń regularnych. Zmienia swój wygląd, by dezorientować szukających wzorców." \
+        "Wzorzec widma zostaje rozbity. Rozpływa się w czystym ASCII." \
         60 \
         20 \
         ""
@@ -51,66 +52,66 @@ level_03_encounter1() {
 }
 
 level_03_encounter2() {
-    ui_story "Stone doors grind open. A Search Demon charges forward!"
-    ui_story "It has lost a file somewhere in the /usr hierarchy and is furious."
+    ui_story "Kamienne drzwi skrzypią. Do przodu pędzi Demon Wyszukiwania!"
+    ui_story "Zgubił gdzieś plik w hierarchii /usr i jest wściekły."
     sleep 1
 
     enemy_set \
-        "Search Demon" \
+        "Demon Wyszukiwania" \
         80 \
         16 \
         "text" \
-        "A demon perpetually searching for a lost config file. Its confusion makes it violent." \
-        "You help the demon find its config file with 'find'. It calms down and wanders away." \
+        "Demon nieustannie szukający zagubionego pliku konfiguracyjnego. Jego frustracja czyni go gwałtownym." \
+        "Pomagasz demonowi znaleźć jego plik konfiguracyjny za pomocą 'find'. Spokojnieje i odchodzi." \
         75 \
         25 \
-        "Health Potion"
+        "Mikstura Zdrowia"
 
     combat_start
 }
 
 level_03_encounter3() {
-    ui_story "The temple floor shakes. The Word Count Wyvern drops from the ceiling!"
-    ui_story "Its scales are made of sorted lines and its breath smells of 'wc -l'."
+    ui_story "Podłoga świątyni drży. Z sufitu spada Wiwerna Słów!"
+    ui_story "Jej łuski zbudowane są z posortowanych linii, a oddech śmierdzi 'wc -l'."
     sleep 1
 
     enemy_set \
-        "Word Count Wyvern" \
+        "Wiwerna Słów" \
         110 \
         20 \
         "text" \
-        "A fearsome dragon whose power grows with every line of text it consumes. Only those who can count, sort, and deduplicate can tame it." \
-        "The Wyvern is pacified by your mastery of text tools. It bows and presents the Crystal of grep!" \
+        "Przerażający smok, którego moc rośnie z każdą pochłoniętą linią tekstu. Tylko ci, którzy potrafią liczyć, sortować i deduplikować, mogą go ujarzmić." \
+        "Wiwerna zostaje uśmierzona przez twoje mistrzostwo narzędzi tekstowych. Kłania się i prezentuje Kryształ grep!" \
         110 \
         35 \
-        "Crystal of grep"
+        "Kryształ grep"
 
     combat_start
 }
 
 level_03_complete() {
     ui_clear
-    ui_header "Temple of Text – Cleared!"
-    ui_story "The temple walls go still. Order has been restored to the text streams."
+    ui_header "Świątynia Tekstu – Wyzwolona!"
+    ui_story "Ściany świątyni nieruchomieją. Porządek przywrócono strumieniom tekstu."
     echo
-    ui_dialog "Scholar Regex" \
-        "Magnificent! The temple is at peace. You now command the most powerful \
-text tools in the terminal arsenal. 'grep' to find patterns, 'find' to \
-locate files, 'head'/'tail' for quick sampling, 'wc' for counting, \
-'sort' for ordering, and 'uniq' for deduplication. These tools, \
-combined with pipes, will make you unstoppable!" \
+    ui_dialog "Uczony Regex" \
+        "Wspaniałe! Świątynia jest spokojna. Władasz teraz najpotężniejszymi \
+narzędziami tekstowymi w arsenale terminala. 'grep' do wzorców, 'find' do \
+lokalizowania plików, 'head'/'tail' do szybkiego próbkowania, 'wc' do liczenia, \
+'sort' do porządkowania i 'uniq' do deduplikacji. Te narzędzia, \
+połączone z potokami, uczynią cię niepokonanym!" \
         "${BOLD_GREEN}"
 
     echo
-    printf "  %b━━━ Commands Mastered ━━━%b\n" "${BOLD_WHITE}" "${RESET}"
-    printf "  %bgrep%b  – search for patterns in text\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %bfind%b  – locate files in the filesystem\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %bhead%b  – display first N lines of a file\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %btail%b  – display last N lines of a file\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %bwc%b    – count lines, words, characters\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %bsort%b  – sort lines of text\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %buniq%b  – remove duplicate lines\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %bcut%b   – extract columns from text\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %b━━━ Opanowane Polecenia ━━━%b\n" "${BOLD_WHITE}" "${RESET}"
+    printf "  %bgrep%b  – szukaj wzorców w tekście\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %bfind%b  – lokalizuj pliki w systemie plików\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %bhead%b  – wyświetl pierwsze N linii pliku\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %btail%b  – wyświetl ostatnie N linii pliku\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %bwc%b    – licz linie, słowa, znaki\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %bsort%b  – sortuj linie tekstu\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %buniq%b  – usuń zduplikowane linie\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %bcut%b   – wyodrębniaj kolumny z tekstu\n" "${COLOR_COMMAND}" "${RESET}"
     echo
     press_enter
 

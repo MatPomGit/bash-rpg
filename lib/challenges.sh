@@ -1,32 +1,32 @@
 #!/usr/bin/env bash
-# lib/challenges.sh – Bash-command challenge database
+# lib/challenges.sh – Baza wyzwań z poleceniami Bash
 #
-# Each challenge is a record stored in indexed parallel arrays.  Fields:
-#   CHALLENGE_QUESTION   – what the player is asked
-#   CHALLENGE_ANSWERS    – §-separated list of accepted answers (case-insensitive)
-#   CHALLENGE_HINT       – hint shown after a wrong answer
-#   CHALLENGE_EXPLAIN    – explanation shown after the battle
-#   CHALLENGE_CATEGORY   – navigation|files|text|pipes|scripting
+# Każde wyzwanie to rekord w indeksowanych równoległych tablicach. Pola:
+#   CHALLENGE_QUESTION   – pytanie zadawane graczowi
+#   CHALLENGE_ANSWERS    – lista akceptowanych odpowiedzi oddzielona §
+#   CHALLENGE_HINT       – podpowiedź po błędnej odpowiedzi
+#   CHALLENGE_EXPLAIN    – wyjaśnienie po walce
+#   CHALLENGE_CATEGORY   – navigation|files|text|pipes|scripting|processes
 #
-# NOTE: answers are separated by § (U+00A7 section sign) to avoid conflicts
-# with shell metacharacters like | which can themselves be valid answers.
+# UWAGA: odpowiedzi są oddzielone § (U+00A7 znak sekcji) aby uniknąć
+# konfliktów z metaznakami powłoki jak | które mogą być poprawnymi odpowiedziami.
 
-SEP="§"   # answer separator – does not appear in any bash command/symbol
+SEP="§"   # separator odpowiedzi – nie pojawia się w żadnym poleceniu bash
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Category: NAVIGATION  (ls, pwd, cd, mkdir, rmdir)
+# Kategoria: NAWIGACJA  (ls, pwd, cd, mkdir, rmdir)
 # ──────────────────────────────────────────────────────────────────────────────
 NAV_QUESTIONS=(
-    "What command lists the contents of a directory?"
-    "What command prints your current working directory?"
-    "What command changes your current directory?"
-    "What command creates a new directory?"
-    "What command removes an EMPTY directory?"
-    "What flag shows hidden files with 'ls'?"
-    "What flag makes 'ls' show a long, detailed listing?"
-    "How do you go up one directory level with 'cd'?"
-    "What does 'ls -la' do?"
-    "What shortcut takes you to your home directory with 'cd'?"
+    "Jakie polecenie wyświetla zawartość katalogu?"
+    "Jakie polecenie wypisuje bieżący katalog roboczy?"
+    "Jakie polecenie zmienia bieżący katalog?"
+    "Jakie polecenie tworzy nowy katalog?"
+    "Jakie polecenie usuwa PUSTY katalog?"
+    "Jaka flaga pokazuje ukryte pliki w poleceniu 'ls'?"
+    "Jaka flaga wyświetla szczegółową listę w poleceniu 'ls'?"
+    "Jak przejść o jeden poziom wyżej za pomocą 'cd'?"
+    "Co robi polecenie 'ls -la'?"
+    "Jaki skrót przenosi do katalogu domowego z 'cd'?"
 )
 NAV_ANSWERS=(
     "ls"
@@ -37,48 +37,48 @@ NAV_ANSWERS=(
     "-a§ls -a§ls -la§-la"
     "-l§ls -l§ls -la§-la"
     "cd ..§.."
-    "lists all files with details including hidden§shows all files with permissions"
+    "wyświetla wszystkie pliki ze szczegółami włącznie z ukrytymi§pokazuje pliki z uprawnieniami§ls -la"
     "cd ~§cd§~"
 )
 NAV_HINTS=(
-    "It stands for 'list'."
-    "Stands for 'print working directory'."
-    "Stands for 'change directory'."
-    "Stands for 'make directory'."
-    "Stands for 'remove directory' – only works on empty dirs!"
-    "Hidden files start with a dot (.).  The flag is a single letter."
-    "The flag that gives a 'long' format listing."
-    "Two dots (..) always refer to the parent directory."
-    "Combine -l (long) with -a (all/hidden)."
-    "Tilde (~) is your home directory alias."
+    "Pochodzi od słowa 'list' (lista)."
+    "Skrót od 'print working directory' (wydrukuj katalog roboczy)."
+    "Skrót od 'change directory' (zmień katalog)."
+    "Skrót od 'make directory' (utwórz katalog)."
+    "Skrót od 'remove directory' (usuń katalog) – działa tylko na pustych!"
+    "Ukryte pliki zaczynają się od kropki (.). Flaga to jedna litera."
+    "Flaga dająca 'długi' (long) format listingu."
+    "Dwie kropki (..) zawsze oznaczają katalog nadrzędny."
+    "Łączy -l (długi) z -a (wszystkie/ukryte)."
+    "Tylda (~) to alias katalogu domowego."
 )
 NAV_EXPLAINS=(
-    "'ls' lists directory contents. Use 'ls -la' to see all details including hidden files."
-    "'pwd' shows your exact location in the filesystem hierarchy."
-    "'cd <path>' changes your shell's current directory."
-    "'mkdir <name>' creates a directory. Use '-p' to create nested dirs at once."
-    "'rmdir' only removes empty directories. Use 'rm -r' for non-empty ones."
-    "'ls -a' shows ALL files, including hidden ones that start with a dot (e.g., .bashrc)."
-    "'ls -l' shows permissions, owner, size, and modification time of each file."
-    "'cd ..' navigates to the parent directory one level up."
-    "'ls -la' combines long format (-l) with show-all (-a) – very commonly used!"
-    "'cd' or 'cd ~' both take you to your home directory (/home/username)."
+    "'ls' wyświetla zawartość katalogu. Użyj 'ls -la' by zobaczyć wszystkie szczegóły łącznie z ukrytymi."
+    "'pwd' pokazuje dokładną lokalizację w hierarchii systemu plików."
+    "'cd <ścieżka>' zmienia bieżący katalog powłoki."
+    "'mkdir <nazwa>' tworzy katalog. Użyj '-p' by tworzyć zagnieżdżone katalogi naraz."
+    "'rmdir' usuwa tylko puste katalogi. Użyj 'rm -r' dla niepustych."
+    "'ls -a' pokazuje WSZYSTKIE pliki, łącznie z ukrytymi zaczynającymi się od kropki (np. .bashrc)."
+    "'ls -l' pokazuje uprawnienia, właściciela, rozmiar i datę modyfikacji każdego pliku."
+    "'cd ..' przechodzi do katalogu nadrzędnego o jeden poziom wyżej."
+    "'ls -la' łączy format długi (-l) z pokazaniem wszystkich (-a) – bardzo powszechnie używane!"
+    "'cd' lub 'cd ~' zabierają do katalogu domowego (/home/nazwa)."
 )
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Category: FILES  (touch, cat, cp, mv, rm, ln, file)
+# Kategoria: PLIKI  (touch, cat, cp, mv, rm, ln, file)
 # ──────────────────────────────────────────────────────────────────────────────
 FILE_QUESTIONS=(
-    "What command creates an empty file (or updates its timestamp)?"
-    "What command displays the contents of a file?"
-    "What command copies a file?"
-    "What command moves or renames a file?"
-    "What command deletes a file?"
-    "What flag lets 'rm' remove a directory and all its contents recursively?"
-    "What command shows the type of a file?"
-    "How do you display the manual for a command, e.g., for 'ls'?"
-    "What command creates a symbolic (soft) link?"
-    "What option of 'cp' preserves file attributes (recursive) when copying dirs?"
+    "Jakie polecenie tworzy pusty plik (lub aktualizuje jego znacznik czasu)?"
+    "Jakie polecenie wyświetla zawartość pliku?"
+    "Jakie polecenie kopiuje plik?"
+    "Jakie polecenie przenosi lub zmienia nazwę pliku?"
+    "Jakie polecenie usuwa plik?"
+    "Jaka flaga pozwala 'rm' usunąć katalog ze wszystką zawartością rekurencyjnie?"
+    "Jakie polecenie pokazuje typ pliku?"
+    "Jak wyświetlić instrukcję polecenia, np. dla 'ls'?"
+    "Jakie polecenie tworzy dowiązanie symboliczne (miękkie)?"
+    "Jaka opcja 'cp' zachowuje atrybuty pliku (rekurencyjnie) przy kopiowaniu katalogów?"
 )
 FILE_ANSWERS=(
     "touch"
@@ -93,44 +93,44 @@ FILE_ANSWERS=(
     "-r§cp -r§-a§cp -a"
 )
 FILE_HINTS=(
-    "It 'touches' the file – creating it if absent."
-    "Concatenate – even works with a single file to just print it."
-    "Copy – first arg is source, second is destination."
-    "Move – also used for renaming."
-    "Remove – be careful, there's no trash can!"
-    "The flag stands for 'recursive'."
-    "This command inspects the file type, not its name."
-    "Every command has a manual page – use 'man'."
-    "Link with the 'symbolic' (-s) flag."
-    "Think 'recursive' or 'archive'."
+    "'Dotyka' plik – tworząc go, jeśli nie istnieje."
+    "Concatenate – działa też dla jednego pliku by go wypisać."
+    "Copy – pierwszy argument to źródło, drugi to cel."
+    "Move – używane też do zmiany nazwy."
+    "Remove – ostrożnie, nie ma kosza!"
+    "Flaga oznaczająca 'rekurencyjnie' (recursive)."
+    "To polecenie sprawdza typ pliku, nie jego nazwę."
+    "Każde polecenie ma stronę podręcznika – użyj 'man'."
+    "Dowiązanie z flagą 'symboliczne' (-s)."
+    "Pomyśl o 'rekurencyjnie' lub 'archiwum'."
 )
 FILE_EXPLAINS=(
-    "'touch file.txt' creates file.txt if it doesn't exist, or updates its timestamps."
-    "'cat file.txt' prints the entire file to the terminal. 'less' is better for large files."
-    "'cp source dest' copies a file. 'cp -r dir1 dir2' copies directories recursively."
-    "'mv old new' renames or moves a file. Unlike 'cp', the original is removed."
-    "'rm file' deletes permanently. Always double-check – there is no undo!"
-    "'rm -r dir' removes dir and all contents. '-rf' skips confirmation prompts."
-    "'file photo.jpg' reveals whether it's really a JPEG, PNG, text, script, etc."
-    "'man <command>' opens the built-in manual. Press 'q' to quit."
-    "'ln -s target link_name' creates a shortcut that points to the target."
-    "'cp -r src dst' copies directories recursively. '-a' also preserves metadata."
+    "'touch plik.txt' tworzy plik.txt jeśli nie istnieje lub aktualizuje jego datę."
+    "'cat plik.txt' wypisuje cały plik na terminal. 'less' jest lepszy dla dużych plików."
+    "'cp źródło cel' kopiuje plik. 'cp -r katalog1 katalog2' kopiuje katalogi rekurencyjnie."
+    "'mv stare nowe' zmienia nazwę lub przenosi plik. W przeciwieństwie do 'cp', oryginał jest usuwany."
+    "'rm plik' usuwa trwale. Zawsze sprawdź dwa razy – nie ma cofania!"
+    "'rm -r katalog' usuwa katalog i całą zawartość. '-rf' pomija monity o potwierdzenie."
+    "'file zdjęcie.jpg' odkrywa czy to naprawdę JPEG, PNG, tekst, skrypt itp."
+    "'man <polecenie>' otwiera wbudowany podręcznik. Naciśnij 'q' by wyjść."
+    "'ln -s cel nazwa_dowiązania' tworzy skrót wskazujący na cel."
+    "'cp -r src dst' kopiuje katalogi rekurencyjnie. '-a' zachowuje też metadane."
 )
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Category: TEXT  (grep, find, head, tail, wc, sort, uniq, cut)
+# Kategoria: TEKST  (grep, find, head, tail, wc, sort, uniq, cut)
 # ──────────────────────────────────────────────────────────────────────────────
 TEXT_QUESTIONS=(
-    "What command searches for a pattern inside files?"
-    "What command finds files in the filesystem by name, type, etc.?"
-    "What command shows the FIRST lines of a file?"
-    "What command shows the LAST lines of a file?"
-    "What command counts lines, words, and characters in a file?"
-    "What command sorts lines of text alphabetically?"
-    "What command removes duplicate adjacent lines?"
-    "What command cuts out specific columns from delimited text?"
-    "What flag makes 'grep' case-insensitive?"
-    "What flag makes 'grep' search recursively through directories?"
+    "Jakie polecenie wyszukuje wzorzec w plikach?"
+    "Jakie polecenie wyszukuje pliki w systemie plików po nazwie, typie itp.?"
+    "Jakie polecenie pokazuje PIERWSZE linie pliku?"
+    "Jakie polecenie pokazuje OSTATNIE linie pliku?"
+    "Jakie polecenie liczy linie, słowa i znaki w pliku?"
+    "Jakie polecenie sortuje linie tekstu alfabetycznie?"
+    "Jakie polecenie usuwa zduplikowane kolejne linie?"
+    "Jakie polecenie wycina określone kolumny z tekstu oddzielonego?"
+    "Jaka flaga sprawia że 'grep' ignoruje wielkość liter?"
+    "Jaka flaga sprawia że 'grep' przeszukuje katalogi rekurencyjnie?"
 )
 TEXT_ANSWERS=(
     "grep"
@@ -145,96 +145,96 @@ TEXT_ANSWERS=(
     "-r§-R§grep -r§grep -R"
 )
 TEXT_HINTS=(
-    "Global Regular Expression Print – searches for patterns."
-    "Searches the filesystem – not the content, but the files themselves."
-    "Think 'head of the file' – first N lines."
-    "Think 'tail of the file' – last N lines."
-    "Word Count – also counts lines and bytes."
-    "Alphabetical ordering of lines."
-    "Unique – collapses consecutive duplicate lines."
-    "Cut columns using a delimiter and field number."
-    "The flag that ignores case differences."
-    "The flag that descends into subdirectories."
+    "Global Regular Expression Print – szuka wzorców."
+    "Przeszukuje system plików – nie zawartość, lecz same pliki."
+    "Pomyśl 'głowa pliku' – pierwsze N linii."
+    "Pomyśl 'ogon pliku' – ostatnie N linii."
+    "Word Count – liczy też linie i bajty."
+    "Alfabetyczne porządkowanie linii."
+    "Unique – zwija kolejne zduplikowane linie."
+    "Wytnij kolumny używając separatora i numeru pola."
+    "Flaga ignorująca różnice w wielkości liter."
+    "Flaga schodząca do podkatalogów."
 )
 TEXT_EXPLAINS=(
-    "'grep pattern file' finds all lines matching the pattern. Supports regex."
-    "'find /path -name \"*.sh\"' locates all .sh files under /path."
-    "'head -n 20 file' shows the first 20 lines. Default is 10."
-    "'tail -n 20 file' shows the last 20 lines. 'tail -f' follows live output."
-    "'wc -l file' counts lines; '-w' counts words; '-c' counts bytes."
-    "'sort file' sorts alphabetically. '-n' for numeric, '-r' for reverse."
-    "'uniq' removes duplicate ADJACENT lines. Combine with 'sort' first."
-    "'cut -d: -f1 /etc/passwd' extracts first field separated by colons."
-    "'grep -i pattern file' matches regardless of letter case."
-    "'grep -r pattern /dir' searches all files inside /dir recursively."
+    "'grep wzorzec plik' szuka wszystkich linii pasujących do wzorca. Obsługuje wyrażenia regularne."
+    "'find /ścieżka -name \"*.sh\"' lokalizuje wszystkie pliki .sh pod daną ścieżką."
+    "'head -n 20 plik' pokazuje pierwsze 20 linii. Domyślnie 10."
+    "'tail -n 20 plik' pokazuje ostatnie 20 linii. 'tail -f' śledzi wyjście na żywo."
+    "'wc -l plik' liczy linie; '-w' słowa; '-c' bajty."
+    "'sort plik' sortuje alfabetycznie. '-n' numerycznie, '-r' odwrotnie."
+    "'uniq' usuwa KOLEJNE zduplikowane linie. Połącz z 'sort' najpierw."
+    "'cut -d: -f1 /etc/passwd' wyodrębnia pierwsze pole oddzielone dwukropkami."
+    "'grep -i wzorzec plik' dopasowuje niezależnie od wielkości liter."
+    "'grep -r wzorzec /katalog' przeszukuje wszystkie pliki w katalogu rekurencyjnie."
 )
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Category: PIPES  (|, >, >>, <, 2>, tee, xargs)
+# Kategoria: POTOKI  (|, >, >>, <, 2>, tee, xargs)
 # ──────────────────────────────────────────────────────────────────────────────
 PIPE_QUESTIONS=(
-    "What symbol sends the output of one command as input to another?"
-    "What symbol redirects stdout to a file, OVERWRITING it?"
-    "What symbol redirects stdout to a file, APPENDING to it?"
-    "What symbol redirects a file as stdin to a command?"
-    "What symbol redirects stderr (error output) to a file?"
-    "What command both displays AND saves output to a file simultaneously?"
-    "How do you redirect both stdout and stderr to the same file?"
-    "What does '/dev/null' represent?"
-    "What command turns lines of stdin into arguments for another command?"
-    "What does '2>&1' mean?"
+    "Jaki symbol wysyła wyjście jednego polecenia jako wejście do innego?"
+    "Jaki symbol przekierowuje stdout do pliku, NADPISUJĄC go?"
+    "Jaki symbol przekierowuje stdout do pliku, DOŁĄCZAJĄC do niego?"
+    "Jaki symbol przekierowuje plik jako stdin do polecenia?"
+    "Jaki symbol przekierowuje stderr (błędy) do pliku?"
+    "Jakie polecenie jednocześnie wyświetla I zapisuje wyjście do pliku?"
+    "Jak przekierować zarówno stdout jak i stderr do tego samego pliku?"
+    "Co reprezentuje '/dev/null'?"
+    "Jakie polecenie zamienia linie stdin w argumenty innego polecenia?"
+    "Co oznacza '2>&1'?"
 )
 PIPE_ANSWERS=(
-    "|§pipe"
-    ">§greater than"
-    ">>§double greater than"
-    "<§less than"
+    "|§pipe§potok"
+    ">§znak większości"
+    ">>§podwójny znak większości"
+    "<§znak mniejszości"
     "2>"
     "tee"
     "2>&1§>&§> file 2>&1"
-    "the null device§a black hole§a device that discards all input§/dev/null discards"
+    "urządzenie null§czarna dziura§urządzenie odrzucające dane§/dev/null odrzuca wszystko"
     "xargs"
-    "redirects stderr to stdout§merges stderr into stdout§sends stderr to stdout"
+    "przekierowuje stderr na stdout§łączy stderr ze stdout§wysyła stderr do stdout"
 )
 PIPE_HINTS=(
-    "It looks like a pipe on the keyboard – the vertical bar character."
-    "A single 'greater-than' sign."
-    "Two 'greater-than' signs."
-    "A 'less-than' sign – input flows left."
-    "File descriptor 2 is stderr."
-    "Like 'tee' in plumbing – splits the flow."
-    "File descriptor 2 to file descriptor 1."
-    "Like a black hole – data written to it disappears."
-    "Execute arguments – pairs well with 'find'."
-    "2 (stderr) goes to wherever &1 (stdout) is going."
+    "Wygląda jak rura na klawiaturze – pionowa kreska."
+    "Jeden znak 'większy-niż'."
+    "Dwa znaki 'większy-niż'."
+    "Znak 'mniejszy-niż' – wejście płynie z lewej."
+    "Deskryptor pliku 2 to stderr."
+    "Jak 'T' w hydraulice – rozdziela przepływ."
+    "Deskryptor pliku 2 do deskryptora pliku 1."
+    "Jak czarna dziura – dane zapisane do niej znikają."
+    "Execute arguments – dobrze pasuje do 'find'."
+    "2 (stderr) trafia tam, gdzie jest &1 (stdout)."
 )
 PIPE_EXPLAINS=(
-    "'ls | grep .sh' pipes ls output into grep, filtering .sh files."
-    "'echo hi > file.txt' creates or overwrites file.txt with 'hi'."
-    "'echo hi >> file.txt' appends 'hi' to file.txt without erasing existing content."
-    "'sort < unsorted.txt' reads unsorted.txt as input for the sort command."
-    "'cmd 2> errors.log' saves error messages to errors.log."
-    "'ls | tee output.txt' prints to terminal AND writes to output.txt at once."
-    "'cmd > file 2>&1' sends both stdout and stderr into file."
-    "'/dev/null' discards everything written to it – useful for silencing output."
-    "'find . -name \"*.log\" | xargs rm' deletes all .log files found."
-    "'2>&1' merges stderr into stdout so they go to the same destination."
+    "'ls | grep .sh' przekazuje wynik ls do grep, filtrując pliki .sh."
+    "'echo hi > plik.txt' tworzy lub nadpisuje plik.txt słowem 'hi'."
+    "'echo hi >> plik.txt' dołącza 'hi' do plik.txt bez usuwania zawartości."
+    "'sort < niesortowany.txt' czyta niesortowany.txt jako wejście dla polecenia sort."
+    "'polecenie 2> błędy.log' zapisuje komunikaty błędów do błędy.log."
+    "'ls | tee wynik.txt' wypisuje na terminal I zapisuje do wynik.txt jednocześnie."
+    "'polecenie > plik 2>&1' wysyła zarówno stdout jak i stderr do pliku."
+    "'/dev/null' odrzuca wszystko co jest do niego zapisywane – przydatne do wyciszania wyjścia."
+    "'find . -name \"*.log\" | xargs rm' usuwa wszystkie znalezione pliki .log."
+    "'2>&1' łączy stderr ze stdout tak by trafiały do tego samego miejsca."
 )
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Category: SCRIPTING  (variables, conditions, loops, functions)
+# Kategoria: SKRYPTY  (zmienne, warunki, pętle, funkcje)
 # ──────────────────────────────────────────────────────────────────────────────
 SCRIPT_QUESTIONS=(
-    "How do you assign the value 'hello' to a variable called 'msg'?"
-    "How do you read (expand) the value of a variable 'msg'?"
-    "What keyword starts an if-statement in bash?"
-    "What keyword ends an if-statement in bash?"
-    "What keyword starts a for loop in bash?"
-    "What keyword starts a while loop in bash?"
-    "What command reads a line of user input into a variable 'name'?"
-    "What special variable holds the exit status of the last command?"
-    "How do you define a bash function called 'greet'?"
-    "What shebang line should a bash script start with?"
+    "Jak przypisać wartość 'hello' do zmiennej o nazwie 'msg'?"
+    "Jak odczytać (rozwinąć) wartość zmiennej 'msg'?"
+    "Jakie słowo kluczowe rozpoczyna instrukcję if w bash?"
+    "Jakie słowo kluczowe kończy instrukcję if w bash?"
+    "Jakie słowo kluczowe rozpoczyna pętlę for w bash?"
+    "Jakie słowo kluczowe rozpoczyna pętlę while w bash?"
+    "Jakie polecenie wczytuje linię wejścia użytkownika do zmiennej 'name'?"
+    "Jaka specjalna zmienna przechowuje kod wyjścia ostatniego polecenia?"
+    "Jak zdefiniować funkcję bash o nazwie 'greet'?"
+    "Od jakiej linii shebang powinien zaczynać się skrypt bash?"
 )
 SCRIPT_ANSWERS=(
     "msg=hello§msg='hello'§msg=\"hello\""
@@ -249,28 +249,80 @@ SCRIPT_ANSWERS=(
     "#!/usr/bin/env bash§#!/bin/bash"
 )
 SCRIPT_HINTS=(
-    "No spaces around the = sign!"
-    "Prefix the variable name with a dollar sign."
-    "Starts with 'if', ends with 'fi'."
-    "The reverse of 'if'."
-    "Loops start with 'for' and end with 'done'."
-    "Loops start with 'while' and end with 'done'."
-    "The 'read' builtin reads a line of stdin."
-    "Dollar sign followed by a question mark."
-    "The function name followed by () and curly braces."
-    "The first line telling the OS which interpreter to use."
+    "Bez spacji wokół znaku = !"
+    "Poprzedź nazwę zmiennej znakiem dolara."
+    "Zaczyna się od 'if', kończy na 'fi'."
+    "Odwrotność słowa 'if'."
+    "Pętle zaczynają się od 'for' i kończą na 'done'."
+    "Pętle zaczynają się od 'while' i kończą na 'done'."
+    "Wbudowane polecenie 'read' wczytuje linię ze stdin."
+    "Znak dolara po którym następuje znak zapytania."
+    "Nazwa funkcji po której następuje () i nawiasy klamrowe."
+    "Pierwsza linia mówiąca systemowi operacyjnemu który interpreter użyć."
 )
 SCRIPT_EXPLAINS=(
-    "'msg=hello' – no spaces! Bash is strict: 'msg = hello' is a syntax error."
-    "'\$msg' or '\${msg}' expands the variable. Braces are needed in '\${msg}ful'."
-    "'if [ condition ]; then ... elif ...; else ...; fi' is the full structure."
-    "'fi' closes the if-block – it's 'if' spelled backwards!"
-    "'for i in 1 2 3; do echo \$i; done' iterates over a list."
-    "'while [ condition ]; do ...; done' loops while condition is true."
-    "'read -r name' reads a line, storing it in \$name. '-r' prevents backslash escapes."
-    "'\$?' is 0 on success, non-zero on error. Always check after critical commands."
-    "'greet() { echo hello; }' defines a reusable function."
-    "'#!/usr/bin/env bash' is portable; '#!/bin/bash' uses the fixed path."
+    "'msg=hello' – bez spacji! Bash jest surowy: 'msg = hello' to błąd składni."
+    "'\$msg' lub '\${msg}' rozwija zmienną. Nawiasy klamrowe potrzebne np. w '\${msg}owy'."
+    "'if [ warunek ]; then ... elif ...; else ...; fi' to pełna struktura."
+    "'fi' zamyka blok if – to słowo 'if' napisane wspak!"
+    "'for i in 1 2 3; do echo \$i; done' iteruje po liście."
+    "'while [ warunek ]; do ...; done' zapętla się gdy warunek jest prawdziwy."
+    "'read -r name' wczytuje linię, przechowując ją w \$name. '-r' zapobiega escapowaniu znaków."
+    "'\$?' wynosi 0 przy sukcesie, niezerowe przy błędzie. Sprawdzaj po ważnych poleceniach."
+    "'greet() { echo hello; }' definiuje wielokrotnie używaną funkcję."
+    "'#!/usr/bin/env bash' jest przenośny; '#!/bin/bash' używa stałej ścieżki."
+)
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Kategoria: PROCESY  (ps, kill, top, bg, fg, jobs, nohup, pgrep)
+# ──────────────────────────────────────────────────────────────────────────────
+PROC_QUESTIONS=(
+    "Jakie polecenie wyświetla listę aktualnie uruchomionych procesów?"
+    "Jakie polecenie kończy (zabija) proces o podanym PID?"
+    "Jakie polecenie wyświetla dynamiczne informacje o procesach?"
+    "Jakie polecenie wznawia zadanie zawieszone w tle powłoki?"
+    "Jakie polecenie przenosi zadanie z tła na pierwszy plan?"
+    "Jakie polecenie wyświetla zadania działające w tle bieżącej powłoki?"
+    "Jak uruchomić polecenie odporne na sygnał SIGHUP (rozłączenie)?"
+    "Jaka flaga polecenia 'ps' pokazuje wszystkie procesy wszystkich użytkowników?"
+    "Jakie polecenie wyszukuje PID procesu po jego nazwie?"
+    "Jaki numer sygnału wysyła 'kill' domyślnie?"
+)
+PROC_ANSWERS=(
+    "ps"
+    "kill"
+    "top"
+    "bg"
+    "fg"
+    "jobs"
+    "nohup"
+    "aux§-aux§ps aux"
+    "pgrep"
+    "15§SIGTERM§kill -15"
+)
+PROC_HINTS=(
+    "Skrót od 'process status' (status procesów)."
+    "Wysyła sygnał do procesu o podanym identyfikatorze."
+    "Aktualizuje się na bieżąco – wyświetla top (górę) procesów."
+    "Skrót od 'background' (tło)."
+    "Skrót od 'foreground' (pierwszy plan)."
+    "Wyświetla zadania (jobs) bieżącej powłoki."
+    "No Hang Up – ignoruje sygnał rozłączenia."
+    "Pokazuje wszystkich użytkowników (a), format użytkownika (u), wszystkie (x)."
+    "Process grep – szuka PID-u po nazwie procesu."
+    "Domyślny sygnał to SIGTERM (grzeczne zakończenie)."
+)
+PROC_EXPLAINS=(
+    "'ps aux' pokazuje wszystkie uruchomione procesy z detalami użytkownika."
+    "'kill PID' wysyła SIGTERM. 'kill -9 PID' wymusza natychmiastowe zakończenie (SIGKILL)."
+    "'top' to interaktywny monitor procesów. Naciśnij 'q' by wyjść. 'htop' to ulepszona wersja."
+    "'bg %1' wznawia zadanie nr 1 w tle. Użyj po zawieszeniu Ctrl+Z."
+    "'fg %1' przenosi zadanie nr 1 z tła na pierwszy plan terminala."
+    "'jobs' wyświetla zadania tła bieżącej powłoki wraz z ich numerami."
+    "'nohup polecenie &' uruchamia polecenie odporne na wylogowanie, kontynuuje po zamknięciu terminala."
+    "'ps aux': a=wszyscy użytkownicy, u=format użytkownika, x=procesy bez terminala."
+    "'pgrep bash' znajdzie PID wszystkich procesów bash. 'pgrep -l' pokazuje też nazwy."
+    "Sygnał 15 (SIGTERM) prosi grzecznie o zakończenie. Sygnał 9 (SIGKILL) wymusza natychmiastowe."
 )
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -297,6 +349,7 @@ challenges_get_random() {
         text)       q_arr=TEXT_QUESTIONS;   a_arr=TEXT_ANSWERS;   h_arr=TEXT_HINTS;   e_arr=TEXT_EXPLAINS;;
         pipes)      q_arr=PIPE_QUESTIONS;   a_arr=PIPE_ANSWERS;   h_arr=PIPE_HINTS;   e_arr=PIPE_EXPLAINS;;
         scripting)  q_arr=SCRIPT_QUESTIONS; a_arr=SCRIPT_ANSWERS; h_arr=SCRIPT_HINTS; e_arr=SCRIPT_EXPLAINS;;
+        processes)  q_arr=PROC_QUESTIONS;   a_arr=PROC_ANSWERS;   h_arr=PROC_HINTS;   e_arr=PROC_EXPLAINS;;
         *)  return 1;;
     esac
 

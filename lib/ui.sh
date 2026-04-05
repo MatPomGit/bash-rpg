@@ -57,8 +57,8 @@ ui_title_screen() {
     ui_center " ██████╔╝██║  ██║███████║██║  ██║    ██║  ██║██║     ╚██████╔╝ "
     ui_center " ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝   ╚═╝  ╚═╝╚═╝      ╚═════╝  "
     printf "%b" "${RESET}"
-    ui_center "${BOLD_YELLOW}⚔  The Terminal Chronicles  ⚔${RESET}"
-    ui_center "${DIM}Master the Bash Console to Save the Kingdom${RESET}"
+    ui_center "${BOLD_YELLOW}⚔  Kroniki Terminala  ⚔${RESET}"
+    ui_center "${DIM}Opanuj konsolę Bash, by ocalić Królestwo${RESET}"
     echo
     ui_hr "═"
     echo
@@ -143,10 +143,10 @@ ui_player_status() {
     local hp_col; hp_col=$(hp_color "$hp" "$max_hp")
     echo
     ui_hr "─"
-    printf " ${COLOR_PLAYER}%s${RESET}   Lvl ${BOLD_WHITE}%d${RESET}   " "$name" "$level"
-    printf "HP: ${hp_col}%s${RESET} %b[%s%b]${RESET}   " "$hp/$max_hp" "${hp_col}" "$(ui_bar "$hp" "$max_hp" 15)" "${hp_col}"
-    printf "XP: ${COLOR_XP}%d/%d${RESET}   " "$xp" "$xp_next"
-    printf "${COLOR_GOLD}%d G${RESET}\n" "$gold"
+    printf " ${COLOR_PLAYER}%s${RESET}   Poz. ${BOLD_WHITE}%d${RESET}   " "$name" "$level"
+    printf "PŻ: ${hp_col}%s${RESET} %b[%s%b]${RESET}   " "$hp/$max_hp" "${hp_col}" "$(ui_bar "$hp" "$max_hp" 15)" "${hp_col}"
+    printf "PD: ${COLOR_XP}%d/%d${RESET}   " "$xp" "$xp_next"
+    printf "${COLOR_GOLD}%d Zł${RESET}\n" "$gold"
     ui_hr "─"
 }
 
@@ -155,7 +155,7 @@ ui_enemy_status() {
     local hp="$2"
     local max_hp="$3"
     local hp_col; hp_col=$(hp_color "$hp" "$max_hp")
-    printf " ${COLOR_ENEMY}%s${RESET}   HP: ${hp_col}%d/%d [%s]${RESET}\n" \
+    printf " ${COLOR_ENEMY}%s${RESET}   PŻ: ${hp_col}%d/%d [%s]${RESET}\n" \
         "$name" "$hp" "$max_hp" "$(ui_bar "$hp" "$max_hp" 15)"
 }
 
@@ -180,18 +180,18 @@ ui_info() {
 }
 
 ui_xp_gain() {
-    printf "  %b+%d XP%b\n" "${COLOR_XP}" "$1" "${RESET}"
+    printf "  %b+%d PD%b\n" "${COLOR_XP}" "$1" "${RESET}"
 }
 
 ui_gold_gain() {
-    printf "  %b+%d Gold%b\n" "${COLOR_GOLD}" "$1" "${RESET}"
+    printf "  %b+%d Złota%b\n" "${COLOR_GOLD}" "$1" "${RESET}"
 }
 
 ui_level_up() {
     local level="$1"
     echo
     ui_hr "★"
-    ui_center "${BOLD_YELLOW}★  LEVEL UP! You reached Level ${level}!  ★${RESET}"
+    ui_center "${BOLD_YELLOW}★  AWANS NA POZIOM! Osiągnąłeś Poziom ${level}!  ★${RESET}"
     ui_hr "★"
     echo
 }
@@ -204,7 +204,7 @@ press_enter() {
     # Skip when running in test mode or when stdin is not an interactive terminal
     [[ "${BASH_RPG_TESTING:-}" == "1" ]] && return 0
     [[ -t 0 ]] || return 0
-    printf "\n  %b[ Press ENTER to continue... ]%b" "${DIM}" "${RESET}"
+    printf "\n  %b[ Naciśnij ENTER, aby kontynuować... ]%b" "${DIM}" "${RESET}"
     read -r
     echo
 }
@@ -233,7 +233,7 @@ ui_combat_banner() {
     local enemy_name="$1"
     echo
     printf "%b" "${BOLD_RED}"
-    ui_center "⚔  COMBAT: ${enemy_name}  ⚔"
+    ui_center "⚔  WALKA: ${enemy_name}  ⚔"
     printf "%b" "${RESET}"
     echo
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# levels/level_04.sh – The River of Pipes
-# Teaches: |, >, >>, <, 2>, tee, xargs, /dev/null
+# levels/level_04.sh – Rzeka Potoków
+# Uczy: |, >, >>, <, 2>, tee, xargs, /dev/null
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/../lib/colors.sh"
@@ -11,38 +11,38 @@ source "${SCRIPT_DIR}/../lib/save_load.sh"
 
 level_04_intro() {
     ui_clear
-    ui_header "Chapter 4 – The River of Pipes"
-    ui_story "You arrive at the banks of the legendary River of Pipes."
-    ui_story "Data flows like water, redirected by mysterious symbols carved into stone."
-    ui_story "A ferryman poles a raft of connected pipes toward you."
+    ui_header "Rozdział 4 – Rzeka Potoków"
+    ui_story "Docierasz do brzegów legendarnej Rzeki Potoków."
+    ui_story "Dane płyną jak woda, przekierowywane przez tajemnicze symbole wyryte w kamieniu."
+    ui_story "Przewoźnik pcha tratwę ze złączonych rur ku tobie."
     echo
-    ui_dialog "Ferryman Redirect" \
-        "To cross the River of Pipes, you must understand the flow of data. \
-The pipe symbol '|' sends output from one command to another. \
-The chevrons '>' and '>>' redirect to files. '<' pulls from files. \
-'2>' captures errors. And 'tee' splits the flow in two. \
-Master redirection and you master the very lifeblood of the shell!" \
+    ui_dialog "Przewoźnik Przekierowanie" \
+        "By przeprawić się przez Rzekę Potoków, musisz rozumieć przepływ danych. \
+Symbol potoku '|' wysyła wyjście jednego polecenia do drugiego. \
+Nawiasy '>' i '>>' przekierowują do plików. '<' pobiera z plików. \
+'2>' przechwytuje błędy. A 'tee' rozdziela przepływ na dwa strumienie. \
+Opanuj przekierowania, a opanujesz samą krew powłoki!" \
         "${BOLD_WHITE}"
     press_enter
 
-    ui_story "Three river monsters guard the crossing."
-    ui_story "Only a master of pipes and redirection may pass."
+    ui_story "Trzy potwory rzeczne strzegą przeprawy."
+    ui_story "Tylko mistrz potoków i przekierowań może przejść."
     echo
     press_enter
 }
 
 level_04_encounter1() {
-    ui_story "A Pipe Drake erupts from the water, coiling around a broken pipeline!"
-    ui_story "Its tail is a pipe symbol and it breathes unconnected commands."
+    ui_story "Potokowy Smok wyrywa się z wody, owijając się wokół zepsutego rurociągu!"
+    ui_story "Jego ogon to symbol potoku, a z pyska zieje niezłączonymi poleceniami."
     sleep 1
 
     enemy_set \
-        "Pipe Drake" \
+        "Potokowy Smok" \
         70 \
         14 \
         "pipes" \
-        "A serpentine dragon whose power comes from broken pipelines. It cannot stand connected commands." \
-        "The Pipe Drake untangles itself and slithers back into the river, humbled." \
+        "Wężowy smok, którego moc pochodzi ze zepsutych rurociągów. Nie znosi połączonych poleceń." \
+        "Potokowy Smok rozplątuje się i wślizguje z powrotem do rzeki, upokorzony." \
         75 \
         25 \
         ""
@@ -51,66 +51,66 @@ level_04_encounter1() {
 }
 
 level_04_encounter2() {
-    ui_story "The current surges! A Redirect Serpent surfaces, hissing file names!"
-    ui_story "It overwrites files indiscriminately with its '>' fang."
+    ui_story "Nurt przybiera! Wąż Przekierowania wynurza się, sycząc nazwami plików!"
+    ui_story "Indyskryminacyjnie nadpisuje pliki swoim kłem '>'."
     sleep 1
 
     enemy_set \
-        "Redirect Serpent" \
+        "Wąż Przekierowania" \
         90 \
         17 \
         "pipes" \
-        "A cunning serpent that overwrites important files with a flick of its '>' fang. It fears the '>>' operator above all." \
-        "The serpent is forced to append rather than overwrite, and retreats in shame." \
+        "Przebiegły wąż nadpisujący ważne pliki kłem '>'. Boi się operatora '>>' nade wszystko." \
+        "Wąż jest zmuszony dołączać zamiast nadpisywać i wycofuje się ze wstydem." \
         90 \
         30 \
-        "Health Potion"
+        "Mikstura Zdrowia"
 
     combat_start
 }
 
 level_04_encounter3() {
-    ui_story "The river goes dark. The Stream Kraken rises from the depths!"
-    ui_story "Eight tentacles, each a different file descriptor, thrash the water."
+    ui_story "Rzeka ciemnieje. Z głębin wynurza się Kałamarnica Strumieni!"
+    ui_story "Osiem macek, każda to inny deskryptor pliku, smaga wodę."
     sleep 1
 
     enemy_set \
-        "Stream Kraken" \
+        "Kałamarnica Strumieni" \
         130 \
         22 \
         "pipes" \
-        "The ancient Kraken of stderr and stdout. It tangles all your pipes and redirects your errors to /dev/null. A fearsome foe." \
-        "The Kraken's file descriptors are sorted at last. It sinks back with a satisfied gurgle, leaving the Trident of Pipes!" \
+        "Starożytna kałamarnica stderr i stdout. Plącze wszystkie twoje potoki i przekierowuje błędy do /dev/null. Przerażający przeciwnik." \
+        "Deskryptory pliku kałamarnicy zostają wreszcie posortowane. Zanurza się z zadowolonym bulgotaniem, zostawiając Trójząb Potoków!" \
         130 \
         40 \
-        "Trident of Pipes"
+        "Trójząb Potoków"
 
     combat_start
 }
 
 level_04_complete() {
     ui_clear
-    ui_header "River of Pipes – Crossed!"
-    ui_story "The river calms. Data flows smoothly through perfectly connected pipes."
+    ui_header "Rzeka Potoków – Przeprawiona!"
+    ui_story "Rzeka uspokaja się. Dane płyną płynnie przez idealnie połączone potoki."
     echo
-    ui_dialog "Ferryman Redirect" \
-        "You have done it! The river is tamed. With pipes and redirections, \
-you can chain any number of commands, filter and transform data streams, \
-save output to files, and silence noise with /dev/null. \
-These are the fundamental building blocks of shell scripting mastery. \
-The Wizard's Tower awaits you on the far shore!" \
+    ui_dialog "Przewoźnik Przekierowanie" \
+        "Zrobiłeś to! Rzeka jest oswojona. Z potokami i przekierowaniami \
+możesz łączyć dowolną liczbę poleceń, filtrować i transformować strumienie danych, \
+zapisywać wyjście do plików i wyciszać hałas z /dev/null. \
+To są fundamentalne elementy składowe mistrzostwa skryptowania powłoki. \
+Wieża Czarodzieja czeka na ciebie na drugim brzegu!" \
         "${BOLD_GREEN}"
 
     echo
-    printf "  %b━━━ Operators Mastered ━━━%b\n" "${BOLD_WHITE}" "${RESET}"
-    printf "  %b|%b      – pipe: send stdout to next command's stdin\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %b>%b      – redirect stdout to file (overwrite)\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %b>>%b     – redirect stdout to file (append)\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %b<%b      – redirect file to stdin\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %b2>%b     – redirect stderr to file\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %b2>&1%b   – redirect stderr to stdout\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %btee%b    – split output: display AND save\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %bxargs%b  – build command args from stdin lines\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %b━━━ Opanowane Operatory ━━━%b\n" "${BOLD_WHITE}" "${RESET}"
+    printf "  %b|%b      – potok: wyślij stdout do stdin następnego polecenia\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %b>%b      – przekieruj stdout do pliku (nadpisz)\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %b>>%b     – przekieruj stdout do pliku (dołącz)\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %b<%b      – przekieruj plik na stdin\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %b2>%b     – przekieruj stderr do pliku\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %b2>&1%b   – przekieruj stderr na stdout\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %btee%b    – podziel wyjście: wyświetl I zapisz\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %bxargs%b  – zbuduj argumenty polecenia z linii stdin\n" "${COLOR_COMMAND}" "${RESET}"
     echo
     press_enter
 

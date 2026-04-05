@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# levels/level_05.sh – The Wizard's Tower
-# Teaches: variables, if, for, while, functions, $?, shebang
+# levels/level_05.sh – Wieża Czarodzieja
+# Uczy: zmienne, if, for, while, funkcje, $?, shebang
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/../lib/colors.sh"
@@ -11,38 +11,38 @@ source "${SCRIPT_DIR}/../lib/save_load.sh"
 
 level_05_intro() {
     ui_clear
-    ui_header "Chapter 5 – The Wizard's Tower"
-    ui_story "At last, the Wizard's Tower of Scripting looms before you."
-    ui_story "Lightning strikes its spire as variables crackle in the air."
-    ui_story "The Grand Wizard Bourne appears in a burst of script fragments."
+    ui_header "Rozdział 5 – Wieża Czarodzieja"
+    ui_story "Nareszcie przed tobą wyrasta Wieża Skryptowania Czarodzieja."
+    ui_story "Błyskawice uderzają w jej iglicę, gdy zmienne skrzą się w powietrzu."
+    ui_story "Wielki Czarodziej Bourne pojawia się w wybuchu fragmentów skryptów."
     echo
-    ui_dialog "Grand Wizard Bourne" \
-        "So you have come to learn the highest art – Bash Scripting! Variables, \
-conditions, loops, and functions are the spells that transform a mere \
-command-typer into a true shell wizard. My tower's guardians test only \
-those worthy of this knowledge. Survive them, and you shall earn the \
-title of Bash Warrior. Fail, and you shall remain a mere mortal forever." \
+    ui_dialog "Wielki Czarodziej Bourne" \
+        "A więc przybyłeś, by nauczyć się najwyższej sztuki – Skryptowania Bash! Zmienne, \
+warunki, pętle i funkcje to zaklęcia, które transformują zwykłego \
+wpisywacza poleceń w prawdziwego czarodzieja powłoki. Strażnicy mojej wieży \
+testują tylko tych godnych tej wiedzy. Przeżyj ich, a zdobędziesz tytuł \
+Wojownika Bash. Ponieś porażkę, a pozostaniesz zwykłym śmiertelnikiem na zawsze." \
         "${BOLD_WHITE}"
     press_enter
 
-    ui_story "Three scripting guardians stand between you and the title of Bash Warrior."
-    ui_story "This is your ultimate test!"
+    ui_story "Trzech strażników skryptowania stoi między tobą a tytułem Wojownika Bash."
+    ui_story "To twój ostateczny test!"
     echo
     press_enter
 }
 
 level_05_encounter1() {
-    ui_story "A Variable Vampire swoops down from the rafters!"
-    ui_story "It drains the values from variables, leaving only empty strings."
+    ui_story "Z krokwi spada Wampir Zmiennych!"
+    ui_story "Wysysa wartości ze zmiennych, zostawiając tylko puste ciągi."
     sleep 1
 
     enemy_set \
-        "Variable Vampire" \
+        "Wampir Zmiennych" \
         80 \
         16 \
         "scripting" \
-        "A pale creature that sucks the values out of variables. It cannot stand proper variable assignment and expansion." \
-        "The vampire's coffin of empty variables is smashed. Variables flow freely once more!" \
+        "Blada istota wysysająca wartości ze zmiennych. Nie znosi prawidłowego przypisywania i rozwijania zmiennych." \
+        "Trumna pustych zmiennych wampira zostaje rozbita. Zmienne znów płyną swobodnie!" \
         100 \
         30 \
         ""
@@ -51,72 +51,66 @@ level_05_encounter1() {
 }
 
 level_05_encounter2() {
-    ui_story "The staircase spirals upward. A Loop Lich blocks the next floor!"
-    ui_story "It is trapped in an infinite loop and trying to drag you in."
+    ui_story "Klatka schodowa wije się w górę. Lich Pętli blokuje następne piętro!"
+    ui_story "Jest uwięziony w nieskończonej pętli i próbuje wciągnąć cię do środka."
     sleep 1
 
     enemy_set \
-        "Loop Lich" \
+        "Lich Pętli" \
         100 \
         19 \
         "scripting" \
-        "An undead mage trapped in an infinite loop. It has been running the same code for centuries and wants company." \
-        "You break the lich's infinite loop with a well-placed 'break' statement. It finally rests." \
+        "Nieumarły mag uwięziony w nieskończonej pętli. Wykonuje ten sam kod od stuleci i szuka towarzystwa." \
+        "Przerywasz nieskończoną pętlę licha dobrze umieszczoną instrukcją 'break'. W końcu odpoczywa." \
         120 \
         35 \
-        "Health Potion"
+        "Mikstura Zdrowia"
 
     combat_start
 }
 
 level_05_encounter3() {
-    ui_story "The tower top. The Condition Construct awakens – a golem of pure if/else!"
-    ui_story "Its body is made of boolean logic and its eyes burn with comparison operators."
+    ui_story "Szczyt wieży. Konstrukt Warunków budzi się – golem z czystego if/else!"
+    ui_story "Jego ciało zbudowane jest z logiki boolowskiej, a oczy płoną operatorami porównania."
     sleep 1
 
     enemy_set \
-        "Condition Construct" \
+        "Konstrukt Warunków" \
         150 \
         25 \
         "scripting" \
-        "A fearsome automaton built from conditional statements. Every attack is a branching decision tree. Only a scripting master can untangle its logic." \
-        "The Construct's final condition evaluates to TRUE: you are worthy. It bows and presents the Staff of Scripting!" \
+        "Przerażający automat zbudowany z instrukcji warunkowych. Każdy atak to rozgałęziające się drzewo decyzyjne. Tylko mistrz skryptowania może rozplątać jego logikę." \
+        "Ostatni warunek Konstruktu ewaluuje do TRUE: jesteś godny. Kłania się i prezentuje Laskę Skryptów!" \
         160 \
         50 \
-        "Staff of Scripting"
+        "Laska Skryptów"
 
     combat_start
 }
 
 level_05_complete() {
     ui_clear
-    ui_header "The Wizard's Tower – Conquered!"
-    ui_story "The tower glows with golden light. You have reached the pinnacle!"
+    ui_header "Wieża Czarodzieja – Zdobyta!"
+    ui_story "Wieża jaśnieje złotym światłem. Osiągnąłeś szczyt!"
     echo
-    ui_dialog "Grand Wizard Bourne" \
-        "INCREDIBLE! You have defeated all my guardians and proven your worth. \
-You now possess the knowledge of variables, conditions, loops, and \
-functions – the four pillars of Bash scripting. With these powers \
-combined with your navigation, file, text, and pipe mastery, \
-you are truly a BASH WARRIOR! The kingdom of the terminal is safe!" \
+    ui_dialog "Wielki Czarodziej Bourne" \
+        "NIESAMOWITE! Pokonałeś wszystkich moich strażników i dowiodłeś swojej wartości. \
+Posiadasz teraz wiedzę zmiennych, warunków, pętli i \
+funkcji – cztery filary skryptowania Bash. Z tymi mocami \
+połączonymi z twoim mistrzostwem nawigacji, plików, tekstu i potoków, \
+jesteś prawdziwym WOJOWNIKIEM BASH! Ale jeszcze jedna próba czeka..." \
         "${BOLD_YELLOW}"
 
     echo
-    printf "  %b━━━ Scripting Mastered ━━━%b\n" "${BOLD_WHITE}" "${RESET}"
-    printf "  %bvar=value%b  – assign a variable (no spaces!)\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %b\$var%b       – expand a variable\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %bif/fi%b      – conditional branching\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %bfor/done%b   – iterate over a list\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %bwhile/done%b – loop while condition is true\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %bfunc() {}%b  – define a function\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %b\$?%b         – exit status of last command\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %bread%b       – read user input\n" "${COLOR_COMMAND}" "${RESET}"
-    echo
-
-    ui_hr "★"
-    ui_center "${BOLD_YELLOW}🏆  Congratulations, ${PLAYER_NAME}!  🏆${RESET}"
-    ui_center "${BOLD_WHITE}You are now a certified BASH WARRIOR!${RESET}"
-    ui_hr "★"
+    printf "  %b━━━ Opanowane Skrypty ━━━%b\n" "${BOLD_WHITE}" "${RESET}"
+    printf "  %bvar=wartość%b  – przypisz zmienną (bez spacji!)\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %b\$var%b         – rozwiń zmienną\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %bif/fi%b        – warunkowe rozgałęzienie\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %bfor/done%b     – iteruj po liście\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %bwhile/done%b   – pętla gdy warunek prawdziwy\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %bfunc() {}%b    – zdefiniuj funkcję\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %b\$?%b           – kod wyjścia ostatniego polecenia\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %bread%b         – wczytaj wejście użytkownika\n" "${COLOR_COMMAND}" "${RESET}"
     echo
     press_enter
 
