@@ -15,9 +15,13 @@ level_04_intro() {
     ui_story "Pokonałeś strażników tekstu. Twój arsenał zaklęć rośnie z każdą chwilą."
     ui_story "Lecz Wirus Chaosu uderzył w samo serce przepływu danych – Rzekę Potoków."
     ui_story "Bez sprawnych połączeń między poleceniami, cały system terminala zginie."
+    ui_story "Jego agenci zerwali potoki, zatamowali przekierowania i zmieszali strumienie."
+    echo
     ui_story "Docierasz do brzegów legendarnej Rzeki Potoków."
-    ui_story "Dane płyną jak woda, przekierowywane przez tajemnicze symbole wyryte w kamieniu."
-    ui_story "Przewoźnik pcha tratwę ze złączonych rur ku tobie."
+    ui_story "Kiedyś wartka i czysta, teraz wzdymają się w niej bąble błędnych danych."
+    ui_story "Dane płyną jak woda – lub raczej – powinny płynąć."
+    ui_story "Teraz spiętrzają się w chaotycznych rozlewiskach, gubią się w martwych ramionach rzeki."
+    ui_story "Na kamieniu przy moście siedzi starszy przewoźnik, reperując rury."
     echo
     ui_dialog "Przewoźnik Przekierowanie" \
         "By przeprawić się przez Rzekę Potoków, musisz rozumieć przepływ danych. \
@@ -25,12 +29,13 @@ Symbol potoku '|' wysyła wyjście jednego polecenia do drugiego jak wodę przez
 Nawiasy '>' i '>>' przekierowują dane do plików – jeden niszczy stare, drugi dołącza. \
 '<' pobiera dane z plików. '2>' przechwytuje błędy jak sieć łowi ryby. \
 A 'tee' rozdziela przepływ na dwa strumienie jednocześnie. \
+Widziałem, jak wielu wędrowców utonęło przez brak tej wiedzy. \
 Opanuj przekierowania, a opanujesz samą krew powłoki!" \
         "${BOLD_WHITE}"
     press_enter
 
-    ui_story "Trzy potwory rzeczne strzegą przeprawy."
-    ui_story "Tylko mistrz potoków i przekierowań może przejść."
+    ui_story "Trzy potwory rzeczne strzegą przeprawy i czynią rzekę nieprzebytą."
+    ui_story "Tylko mistrz potoków i przekierowań może przejść suchą nogą."
     echo
     press_enter
 }
@@ -39,7 +44,8 @@ level_04_spellbook() {
     ui_clear
     ui_header "📖 Księga Zaklęć – Potoki i Przekierowania"
     ui_story "Przewoźnik wyciąga z rękawa metalową tabliczkę z wyrytymi symbolami."
-    ui_story "\"Te znaki to nie litery – to mosty między poleceniami. Naucz się ich!\""
+    ui_story "Symbole błyszczą jak rtęć – to nie litery, to sam przepływ danych."
+    ui_story "\"Te znaki to nie litery – to mosty i śluzy między poleceniami. Naucz się ich!\""
     echo
     ui_hr "─"
     printf "  %b%-6s%b  ✦ %-20s  %s\n" "${COLOR_COMMAND}" "|"     "${RESET}" "Most Mocy"          "wyślij stdout do stdin następnego"
@@ -53,18 +59,24 @@ level_04_spellbook() {
     echo
     ui_dialog "Przewoźnik Przekierowanie" \
         "Każdy z tych symboli to most lub zapora na rzece danych. '|' łączy \
-polecenia – wyjście pierwszego staje się wejściem drugiego. '>' to tama, \
-która skierowuje dane do pliku – ale uwaga, niszczy co było! '>>' delikatniej \
-dołącza do istniejącego pliku. '<' odwraca przepływ – plik zasila polecenie. \
-'2>' przechwytuje błędy oddzielnie. 'tee' rozdziela rzekę na dwa kanały. \
-Łącz je razem jak rury wodociągu, a zbudujesz potężne wodociągi danych!" \
+polecenia – wyjście pierwszego staje się wejściem drugiego. Możesz łączyć \
+tyle poleceń ile chcesz: 'cat plik | grep wzorzec | sort | uniq'. \
+'>' to tama, która skierowuje dane do pliku – ale uwaga, niszczy co było! \
+'>>' delikatniej dołącza do istniejącego pliku. '<' odwraca przepływ – \
+plik zasila polecenie. '2>' przechwytuje błędy oddzielnie od danych. \
+'2>&1' scala stderr ze stdout w jeden strumień. \
+'tee' rozdziela rzekę na dwa kanały – jeden na ekran, drugi do pliku. \
+Łącz je razem jak rury wodociągu, a zbudujesz potężne rurociągi danych!" \
         "${BOLD_CYAN}"
     press_enter
 }
 
 level_04_encounter1() {
+    ui_story "Wchodzisz na most nad rzeką. Woda jest czarna od skażonych danych."
+    ui_story "Nagle most drży. Coś wynurza się z wody!"
     ui_story "Potokowy Smok wyrywa się z wody, owijając się wokół zepsutego rurociągu!"
     ui_story "Jego ogon to symbol potoku, a z pyska zieje niezłączonymi poleceniami."
+    ui_story "Wokół niego wirują fragmenty poleceń, które nigdy nie dotrą do celu."
     sleep 1
 
     enemy_set \
@@ -72,8 +84,8 @@ level_04_encounter1() {
         70 \
         14 \
         "pipes" \
-        "Wężowy smok, którego moc pochodzi ze zepsutych rurociągów. Nie znosi połączonych poleceń." \
-        "Potokowy Smok rozplątuje się i wślizguje z powrotem do rzeki, upokorzony." \
+        "Wężowy smok, którego moc pochodzi ze zepsutych rurociągów. Nie znosi poprawnie połączonych poleceń – zerwane potoki to jego żywioł." \
+        "Potokowy Smok rozplątuje się gdy każde polecenie w łańcuchu dociera do celu. Wślizguje się z powrotem do rzeki, pokonany i upokorzony." \
         75 \
         25 \
         ""
@@ -82,8 +94,11 @@ level_04_encounter1() {
 }
 
 level_04_encounter2() {
-    ui_story "Nurt przybiera! Wąż Przekierowania wynurza się, sycząc nazwami plików!"
-    ui_story "Indyskryminacyjnie nadpisuje pliki swoim kłem '>'."
+    ui_story "Przeprawiasz się na drugi brzeg. Tu rzeka ma kilka ramion – wszystkie kręte."
+    ui_story "Nurt przybiera! Coś pędzi pod powierzchnią, zostawiając ślad bąbli błędów."
+    ui_story "Wąż Przekierowania wynurza się, sycząc nazwami plików!"
+    ui_story "Indyskryminacyjnie nadpisuje pliki swoim kłem '>' – niszczy wszystko na swej drodze."
+    ui_story "Za nim zostaje ścieżka zniszczonych logów i uśmierconych danych."
     sleep 1
 
     enemy_set \
@@ -91,8 +106,8 @@ level_04_encounter2() {
         90 \
         17 \
         "pipes" \
-        "Przebiegły wąż nadpisujący ważne pliki kłem '>'. Boi się operatora '>>' nade wszystko." \
-        "Wąż jest zmuszony dołączać zamiast nadpisywać i wycofuje się ze wstydem." \
+        "Przebiegły wąż nadpisujący ważne pliki kłem '>'. Boi się operatora '>>' nade wszystko – dołączanie zamiast niszczenia to dla niego tortury." \
+        "Wąż jest zmuszony dołączać zamiast nadpisywać i wycofuje się ze wstydem. Za nim widać ścieżkę plików, które udało się ocalić." \
         90 \
         30 \
         "Mikstura zdrowia"
@@ -101,8 +116,10 @@ level_04_encounter2() {
 }
 
 level_04_encounter3() {
+    ui_story "Docierasz do głębokiej toni. Woda jest tu niemal czarna."
     ui_story "Rzeka ciemnieje. Z głębin wynurza się Kałamarnica Strumieni!"
-    ui_story "Osiem macek, każda to inny deskryptor pliku, smaga wodę."
+    ui_story "Osiem macek, każda to inny deskryptor pliku, smaga powierzchnię wody."
+    ui_story "Jej atrament to czysty stderr, zatruwający wszystko wokół."
     sleep 1
 
     enemy_set \
@@ -110,8 +127,8 @@ level_04_encounter3() {
         130 \
         22 \
         "pipes" \
-        "Starożytna kałamarnica stderr i stdout. Plącze wszystkie twoje potoki i przekierowuje błędy do /dev/null. Przerażający przeciwnik." \
-        "Deskryptory pliku kałamarnicy zostają wreszcie posortowane. Zanurza się z zadowolonym bulgotaniem, zostawiając Trójząb Potoków!" \
+        "Starożytna kałamarnica stderr i stdout. Plącze wszystkie twoje potoki i przekierowuje błędy do /dev/null, by nie wiedział co idzie nie tak. Przerażający przeciwnik w każdych wodach." \
+        "Deskryptory pliku kałamarnicy zostają wreszcie posortowane i poprawnie połączone. Zanurza się z zadowolonym bulgotaniem, zostawiając Trójząb Potoków na skale!" \
         130 \
         40 \
         "Trójząb Potoków"
@@ -120,20 +137,26 @@ level_04_encounter3() {
 }
 
 level_04_midpoint() {
-    ui_story "Przewoźnik Przekierowanie dobija do brzegu z wiosłem i zatrzymuje się przy tobie."
+    ui_story "Zatrzymujesz się na kamienistej ławicy w połowie rzeki."
+    ui_story "Przewoźnik Przekierowanie dobija tu łódką i zatrzymuje się przy tobie."
     echo
     ui_dialog "Przewoźnik Przekierowanie" \
-        "Miej się na baczności! Za Kałamarnicą czeka coś gorszego. \
-Pamiętaj o operatorach '&&' i '||' – łańcuchują polecenia logicznie. \
-Subshell '()' izoluje środowisko. A heredoc '<<EOF' wpycha tekst \
-prosto do polecenia. To są broń wyższego rzędu w walce z potokami!" \
+        "Miej się na baczności! Za Kałamarnicą czeka jeszcze coś straszniejszego. \
+Pamiętaj o operatorach '&&' i '||' – łańcuchują polecenia logicznie: \
+'cmd1 && cmd2' wykona drugie tylko jeśli pierwsze się powiedzie. \
+'cmd1 || cmd2' wykona drugie tylko jeśli pierwsze się nie powiedzie. \
+Subshell '()' izoluje środowisko – zmiany tam nie przedostaną się na zewnątrz. \
+A heredoc '<<EOF' wpycha tekst prosto do polecenia bez pliku. \
+To są bronie wyższego rzędu – używaj ich mądrze!" \
         "${BOLD_CYAN}"
     press_enter
 }
 
 level_04_encounter4() {
+    ui_story "Prawie jesteś na drugim brzegu. Rzeka ostatni raz wzdyma się złowrogo."
     ui_story "Rzeka wzbiera. Z jej środka wyłania się Hydra Przekierowań!"
     ui_story "Każda z siedmiu głów reprezentuje inny operator przekierowania."
+    ui_story "Odetnij jedną głowę, a wyrosną dwie – to ostatnia linia obrony Wirusa na rzece."
     sleep 1
 
     enemy_set \
@@ -141,8 +164,8 @@ level_04_encounter4() {
         145 \
         24 \
         "pipes" \
-        "Mityczny potwór z siedmioma głowami – każda to inny operator: |, >, >>, <, 2>, &&, ||. Odetnij jedną głowę, wyrosną dwie. Tylko kompletna wiedza o przekierowaniach może ją pokonać." \
-        "Wszystkie głowy Hydry opadają jednocześnie, gdy demonstrujesz pełne mistrzostwo potoków. Rzeka rozlewa się ze złota i Kamień Potoków ląduje w twoich rękach!" \
+        "Mityczny potwór z siedmioma głowami – każda to inny operator: |, >, >>, <, 2>, &&, ||. Odetnij jedną głowę, wyrosną dwie. Tylko kompletna wiedza o każdym operatorze może ją pokonać." \
+        "Wszystkie głowy Hydry opadają jednocześnie gdy demonstrujesz pełne mistrzostwo potoków. Rzeka rozlewa się złotym blaskiem, a Kamień Potoków ląduje w twoich rękach!" \
         145 \
         45 \
         ""
@@ -154,13 +177,16 @@ level_04_complete() {
     ui_clear
     ui_header "Rzeka Potoków – Przeprawiona!"
     ui_story "Rzeka uspokaja się. Dane płyną płynnie przez idealnie połączone potoki."
+    ui_story "Strumienie są czyste, przekierowania sprawne – Wirus stracił kontrolę nad rzeką."
+    ui_story "Na drugim brzegu widać w oddali sylwetkę wieży przeszytej piorunami."
     echo
     ui_dialog "Przewoźnik Przekierowanie" \
-        "Zrobiłeś to! Rzeka jest oswojona. Z potokami i przekierowaniami \
+        "Zrobiłeś to! Rzeka jest oswojona i znowu czysta. Z potokami i przekierowaniami \
 możesz łączyć dowolną liczbę poleceń, filtrować i transformować strumienie danych, \
 zapisywać wyjście do plików i wyciszać hałas z /dev/null. \
+'2>&1' to jeden z najpotężniejszych tricków – scala stderr ze stdout. \
 To są fundamentalne elementy składowe mistrzostwa skryptowania powłoki. \
-Wieża Czarodzieja czeka na ciebie na drugim brzegu!" \
+Wieża Czarodzieja czeka na ciebie na wzgórzu – tam nauczysz się ostatecznej sztuki!" \
         "${BOLD_GREEN}"
 
     echo
