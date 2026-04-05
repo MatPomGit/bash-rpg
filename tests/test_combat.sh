@@ -39,7 +39,7 @@ echo
 echo "  === Combat Tests ==="
 
 # ── enemy_set ─────────────────────────────────────────────────────
-enemy_set "Test Slime" 50 8 "navigation" "A test enemy." "Defeated!" 30 10 "Health Potion"
+enemy_set "Test Slime" 50 8 "navigation" "A test enemy." "Defeated!" 30 10 "Mikstura Zdrowia"
 assert_eq "enemy name"        "Test Slime"   "$ENEMY_NAME"
 assert_eq "enemy HP"          "50"           "$ENEMY_HP"
 assert_eq "enemy max HP"      "50"           "$ENEMY_MAX_HP"
@@ -47,7 +47,7 @@ assert_eq "enemy attack"      "8"            "$ENEMY_ATTACK"
 assert_eq "enemy category"    "navigation"   "$ENEMY_CATEGORY"
 assert_eq "enemy XP reward"   "30"           "$ENEMY_XP_REWARD"
 assert_eq "enemy gold reward" "10"           "$ENEMY_GOLD_REWARD"
-assert_eq "enemy item reward" "Health Potion" "$ENEMY_ITEM_REWARD"
+assert_eq "nagroda przedmiotu wroga" "Mikstura Zdrowia" "$ENEMY_ITEM_REWARD"
 
 # ── enemy_set without item reward ─────────────────────────────────
 enemy_set "No-loot Ghost" 20 5 "files" "Description." "Victory!" 15 5
@@ -66,19 +66,19 @@ assert_true "HP still positive after one hit" '[[ $PLAYER_HP -gt 0 ]]'
 
 # ── combat_victory awards XP and Gold ─────────────────────────────
 player_create "RewardHero"
-enemy_set "Reward Dummy" 0 0 "navigation" "" "You win!" 50 25 "Health Potion"
+enemy_set "Reward Dummy" 0 0 "navigation" "" "You win!" 50 25 "Mikstura Zdrowia"
 ENEMY_HP=0
 combat_victory > /dev/null
 assert_eq "XP awarded after victory" "50" "$PLAYER_XP"
 assert_eq "Gold awarded after victory" "25" "$PLAYER_GOLD"
-assert_true "Item awarded after victory" 'player_has_item "Health Potion"'
+assert_true "przedmiot po zwycięstwie" 'player_has_item "Mikstura Zdrowia"'
 
 # ── victory with no item reward ────────────────────────────────────
 player_create "NoItemHero"
 enemy_set "Skinflint" 0 0 "files" "" "Won!" 20 5
 ENEMY_HP=0
 combat_victory > /dev/null
-assert_eq "no item when ENEMY_ITEM_REWARD is empty" "0" "${#PLAYER_INVENTORY[@]}"
+assert_eq "brak przedmiotu gdy nagroda pusta" "0" "${#PLAYER_INVENTORY[@]}"
 
 # ── player death during combat ─────────────────────────────────────
 player_create "MortalHero"

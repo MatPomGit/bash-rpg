@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# levels/level_02.sh – The Cave of Files
-# Teaches: touch, cat, cp, mv, rm, ln, file, man
+# levels/level_02.sh – Jaskinia Plików
+# Uczy: touch, cat, cp, mv, rm, ln, file, man
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/../lib/colors.sh"
@@ -11,38 +11,38 @@ source "${SCRIPT_DIR}/../lib/save_load.sh"
 
 level_02_intro() {
     ui_clear
-    ui_header "Chapter 2 – The Cave of Files"
-    ui_story "Beyond the forest lies the entrance to the Cave of Files."
-    ui_story "The cave walls are lined with crystals shaped like file icons."
-    ui_story "A mysterious archivist sits by the entrance, polishing a scroll."
+    ui_header "Rozdział 2 – Jaskinia Plików"
+    ui_story "Za lasem leży wejście do Jaskini Plików."
+    ui_story "Ściany jaskini wyłożone są kryształami w kształcie ikon plików."
+    ui_story "Tajemniczy archiwista siedzi przy wejściu, polerując zwój."
     echo
-    ui_dialog "Archivist Vellum" \
-        "Welcome, navigator! The cave ahead is ruled by creatures that corrupt, \
-hide, and destroy files. To survive, you must master file operations – \
-creating files with 'touch', reading with 'cat', copying with 'cp', \
-moving with 'mv', and the feared 'rm' which destroys without mercy. \
-Tread carefully – unlike the surface world, there is no undo here!" \
+    ui_dialog "Archiwista Pergamin" \
+        "Witaj, nawigatorze! Jaskinia przed tobą rządzona jest przez stwory, które \
+niszczą, ukrywają i usuwają pliki. By przeżyć, musisz opanować operacje \
+na plikach – tworzenie z 'touch', czytanie z 'cat', kopiowanie z 'cp', \
+przenoszenie z 'mv' i budząca postrach 'rm', która niszczy bez litości. \
+Uważaj – w odróżnieniu od świata powyżej, tutaj nie ma cofania!" \
         "${BOLD_WHITE}"
     press_enter
 
-    ui_story "Three guardians protect the Cave of Files."
-    ui_story "Defeat them to claim the Tome of File Mastery."
+    ui_story "Trzech strażników chroni Jaskinię Plików."
+    ui_story "Pokonaj ich, by zdobyć Traktat Mistrzostwa Plików."
     echo
     press_enter
 }
 
 level_02_encounter1() {
-    ui_story "A File Phantom drifts towards you, carrying a blank file..."
-    ui_story "It keeps whispering 'how do you CREATE a file?'"
+    ui_story "Plikowy Fantom dryfuje ku tobie, niosąc pusty plik..."
+    ui_story "Ciągle szepcze 'jak STWORZYĆ plik?'"
     sleep 1
 
     enemy_set \
-        "File Phantom" \
+        "Plikowy Fantom" \
         50 \
         10 \
         "files" \
-        "A translucent spirit holding blank scrolls. It cannot create files and screams at empty directories." \
-        "The phantom finally manifests a file and fades away, satisfied." \
+        "Półprzezroczysty duch dzierżący puste zwoje. Nie potrafi tworzyć plików i wrzeszczy na puste katalogi." \
+        "Fantom w końcu materializuje plik i niknie, usatysfakcjonowany." \
         40 \
         15 \
         ""
@@ -51,65 +51,65 @@ level_02_encounter1() {
 }
 
 level_02_encounter2() {
-    ui_story "Deep in the cave, a Corrupted Daemon blocks the path."
-    ui_story "It has scrambled all the filenames and is frantically moving them around."
+    ui_story "W głębi jaskini Zepsuty Demon blokuje drogę."
+    ui_story "Pomieszał wszystkie nazwy plików i gorączkowo je przenosi."
     sleep 1
 
     enemy_set \
-        "Corrupted Daemon" \
+        "Zepsuty Demon" \
         70 \
         14 \
         "files" \
-        "A daemon born from a failed file system check. It moves files to random locations and laughs maniacally." \
-        "The daemon is forced to restore order, placing every file in its rightful place." \
+        "Demon zrodzony z nieudanego sprawdzania systemu plików. Przenosi pliki w losowe miejsca i rechocze maniakalnie." \
+        "Demon jest zmuszony przywrócić porządek, kładąc każdy plik na właściwym miejscu." \
         60 \
         20 \
-        "Health Potion"
+        "Mikstura Zdrowia"
 
     combat_start
 }
 
 level_02_encounter3() {
-    ui_story "The cave shakes. The Archive Elemental awakens from its slumber!"
-    ui_story "This ancient being is made entirely from compressed archives and corrupted data."
+    ui_story "Jaskinia drży. Archiwalny Elemental przebudza się ze swojego snu!"
+    ui_story "Ta starożytna istota zbudowana jest w całości ze skompresowanych archiwów i zepsutych danych."
     sleep 1
 
     enemy_set \
-        "Archive Elemental" \
+        "Archiwalny Elemental" \
         100 \
         18 \
         "files" \
-        "A towering creature of packed archives and symbolic links. It guards the Tome of File Mastery with brutal file-deletion attacks." \
-        "The Elemental crumbles into a pile of well-organised files. The Tome of File Mastery is yours!" \
+        "Majestatyczne stworzenie ze spakowanych archiwów i dowiązań symbolicznych. Strzeże Traktatu Mistrzostwa Plików brutalnymi atakami usuwania plików." \
+        "Elemental rozsypuje się w stos dobrze zorganizowanych plików. Traktat Mistrzostwa Plików jest twój!" \
         100 \
         30 \
-        "Tome of File Mastery"
+        "Traktat Plików"
 
     combat_start
 }
 
 level_02_complete() {
     ui_clear
-    ui_header "Cave of Files – Cleared!"
-    ui_story "The cave is now bathed in a warm, organised glow."
+    ui_header "Jaskinia Plików – Oczyszczona!"
+    ui_story "Jaskinia skąpana jest teraz w ciepłej, zorganizowanej poświacie."
     echo
-    ui_dialog "Archivist Vellum" \
-        "Extraordinary skill! You have tamed the Cave of Files. Always remember \
-the power you now hold: 'touch' to create, 'cat' to read, 'cp' to copy, \
-'mv' to move or rename, and 'rm' to remove. Use 'rm' wisely – \
-with great power comes great responsibility. There is no trash can in Bash!" \
+    ui_dialog "Archiwista Pergamin" \
+        "Niezwykłe umiejętności! Oswoiłeś Jaskinię Plików. Zawsze pamiętaj \
+o mocy, którą teraz dzierżysz: 'touch' by tworzyć, 'cat' by czytać, 'cp' by kopiować, \
+'mv' by przenosić lub zmieniać nazwę, i 'rm' by usuwać. Używaj 'rm' mądrze – \
+wielka moc rodzi wielką odpowiedzialność. W Bash nie ma kosza!" \
         "${BOLD_GREEN}"
 
     echo
-    printf "  %b━━━ Commands Mastered ━━━%b\n" "${BOLD_WHITE}" "${RESET}"
-    printf "  %btouch%b  – create file / update timestamp\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %bcat%b    – display file contents\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %bcp%b     – copy files/directories\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %bmv%b     – move or rename files\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %brm%b     – remove files (permanent!)\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %bln -s%b  – create symbolic link\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %bfile%b   – identify file type\n" "${COLOR_COMMAND}" "${RESET}"
-    printf "  %bman%b    – read command manual\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %b━━━ Opanowane Polecenia ━━━%b\n" "${BOLD_WHITE}" "${RESET}"
+    printf "  %btouch%b  – utwórz plik / zaktualizuj datę\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %bcat%b    – wyświetl zawartość pliku\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %bcp%b     – kopiuj pliki/katalogi\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %bmv%b     – przenieś lub zmień nazwę pliku\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %brm%b     – usuń pliki (trwale!)\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %bln -s%b  – utwórz dowiązanie symboliczne\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %bfile%b   – określ typ pliku\n" "${COLOR_COMMAND}" "${RESET}"
+    printf "  %bman%b    – czytaj podręcznik polecenia\n" "${COLOR_COMMAND}" "${RESET}"
     echo
     press_enter
 

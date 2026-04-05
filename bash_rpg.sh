@@ -20,6 +20,7 @@ source "${GAME_DIR}/levels/level_02.sh"
 source "${GAME_DIR}/levels/level_03.sh"
 source "${GAME_DIR}/levels/level_04.sh"
 source "${GAME_DIR}/levels/level_05.sh"
+source "${GAME_DIR}/levels/level_06.sh"
 
 # ──────────────────────────────────────────────────────────────────────────────
 # New game
@@ -27,34 +28,34 @@ source "${GAME_DIR}/levels/level_05.sh"
 
 new_game() {
     ui_clear
-    ui_header "New Game"
-    ui_story "Welcome, brave adventurer!"
-    ui_story "The Land of Bash calls for a hero who can master the terminal."
+    ui_header "Nowa Gra"
+    ui_story "Witaj, dzielny poszukiwaczu przygód!"
+    ui_story "Kraina Bash woła bohatera, który opanuje tajniki terminala."
     echo
-    ui_prompt "Enter your hero's name: "
+    ui_prompt "Podaj imię swojego bohatera: "
     local name
     read -r name
-    [[ -z "$name" ]] && name="Hero"
+    [[ -z "$name" ]] && name="Bohater"
     player_create "$name"
     echo
-    printf "  %bWelcome, %s!%b Your adventure begins now.\n\n" "${COLOR_SUCCESS}" "$name" "${RESET}"
+    printf "  %bWitaj, %s!%b Twoja przygoda zaczyna się teraz.\n\n" "${COLOR_SUCCESS}" "$name" "${RESET}"
     sleep 1
 
-    # Prologue
+    # Prolog
     ui_clear
-    ui_header "Prologue"
-    ui_story "Long ago, the Kingdom of Terminal thrived under the rule of Master Bourne."
-    ui_story "The five pillars of the realm – Navigation, Files, Text, Pipes, and Scripting –"
-    ui_story "kept order and prosperity throughout the land."
+    ui_header "Prolog"
+    ui_story "Dawno temu Królestwo Terminala rozkwitało pod rządami Mistrza Bourne'a."
+    ui_story "Pięć filarów krainy – Nawigacja, Pliki, Tekst, Potoki i Skrypty –"
+    ui_story "utrzymywało porządek i dobrobyt w całej krainie."
     echo
-    ui_story "But a great darkness has fallen. Creatures of confusion and chaos have"
-    ui_story "overrun the land, corrupting directories, scrambling files, and breaking"
-    ui_story "pipelines everywhere."
+    ui_story "Lecz wielka ciemność nadeszła. Stwory chaosu i zamętu"
+    ui_story "opanowały ziemię, niszcząc katalogi, mieszając pliki i zrywając"
+    ui_story "potoki wszędzie, gdzie okiem sięgnąć."
     echo
-    ui_story "You are the Chosen One – destined to master the ancient arts of Bash"
-    ui_story "and restore harmony to the terminal kingdom."
+    ui_story "Jesteś Wybrańcem – przeznaczonym do opanowania starożytnej sztuki Bash"
+    ui_story "i przywrócenia harmonii królestwu terminala."
     echo
-    ui_story "Your journey begins at the edge of the Enchanted Forest..."
+    ui_story "Twoja podróż zaczyna się na skraju Zaczarowanego Lasu..."
     echo
     press_enter
 
@@ -67,12 +68,12 @@ new_game() {
 
 continue_game() {
     if load_game; then
-        printf "\n  %bWelcome back, %s! (Level %d)%b\n\n" \
+        printf "\n  %bWitaj ponownie, %s! (Poziom %d)%b\n\n" \
             "${COLOR_SUCCESS}" "$PLAYER_NAME" "$PLAYER_LEVEL" "${RESET}"
         sleep 1
         start_adventure
     else
-        ui_error "No save file found."
+        ui_error "Nie znaleziono pliku zapisu."
         press_enter
     fi
 }
@@ -94,8 +95,9 @@ start_adventure() {
             3) run_level_03 ;;
             4) run_level_04 ;;
             5) run_level_05 ;;
-            6|*)
-                # Game complete
+            6) run_level_06 ;;
+            7|*)
+                # Gra ukończona
                 game_complete
                 return
                 ;;
@@ -119,13 +121,13 @@ start_adventure() {
 main_menu() {
     while true; do
         ui_title_screen
-        local options=("New Game" "Continue" "How to Play" "Quit")
+        local options=("Nowa Gra" "Kontynuuj" "Jak Grać" "Wyjdź")
         if has_save; then
-            options[1]="Continue  [save found]"
+            options[1]="Kontynuuj  [znaleziono zapis]"
         fi
 
-        ui_menu "Main Menu" "${options[@]}"
-        ui_prompt "Choice: "
+        ui_menu "Menu Główne" "${options[@]}"
+        ui_prompt "Wybór: "
         local choice
         read -r choice
 
@@ -134,7 +136,7 @@ main_menu() {
             2) continue_game ;;
             3) show_help ;;
             4|q|Q|quit|exit) farewell; exit 0 ;;
-            *) ui_error "Please enter 1-4." ;;
+            *) ui_error "Podaj cyfrę 1-4." ;;
         esac
     done
 }
@@ -142,22 +144,22 @@ main_menu() {
 game_over_menu() {
     ui_clear
     ui_hr "═"
-    ui_center "${COLOR_ERROR}  G A M E   O V E R  ${RESET}"
+    ui_center "${COLOR_ERROR}  K O N I E C   G R Y  ${RESET}"
     ui_hr "═"
     echo
-    ui_story "You have fallen in battle..."
-    ui_story "But every defeat is a lesson. Rise again and master the terminal!"
+    ui_story "Poległeś w boju..."
+    ui_story "Ale każda porażka to lekcja. Powstań i opanuj terminal!"
     echo
 
-    ui_menu "What will you do?" "Restart from save" "New Game" "Return to Main Menu"
-    ui_prompt "Choice: "
+    ui_menu "Co zamierzasz zrobić?" "Wczytaj zapis" "Nowa Gra" "Wróć do Menu Głównego"
+    ui_prompt "Wybór: "
     local choice
     read -r choice
 
     case "$choice" in
         1)
             if load_game; then
-                PLAYER_HP=$(( PLAYER_MAX_HP / 2 ))  # Start with half HP after revival
+                PLAYER_HP=$(( PLAYER_MAX_HP / 2 ))  # startuj z połową PŻ po wskrzeszeniu
                 start_adventure
             else
                 new_game
@@ -171,19 +173,19 @@ game_over_menu() {
 game_complete() {
     ui_clear
     ui_hr "═"
-    ui_center "${BOLD_YELLOW}  ★  BASH WARRIOR  ★  ${RESET}"
-    ui_center "${BOLD_WHITE}  The Terminal Chronicles  ${RESET}"
+    ui_center "${BOLD_YELLOW}  ★  WOJOWNIK BASH  ★  ${RESET}"
+    ui_center "${BOLD_WHITE}  Kroniki Terminala  ${RESET}"
     ui_hr "═"
     echo
-    ui_story "You have completed all five chapters of the Bash RPG!"
+    ui_story "Ukończyłeś wszystkie sześć rozdziałów Bash RPG!"
     ui_story ""
-    ui_story "By defeating the guardians of Navigation, Files, Text, Pipes, and Scripting,"
-    ui_story "you have restored peace to the Kingdom of Terminal."
+    ui_story "Pokonując strażników Nawigacji, Plików, Tekstu, Potoków, Skryptów"
+    ui_story "i Procesów, przywróciłeś pokój Królestwu Terminala."
     echo
     player_show_stats
     echo
-    ui_story "The skills you learned on this journey are REAL Bash commands."
-    ui_story "Try them in your own terminal and see the power you now hold!"
+    ui_story "Umiejętności zdobyte w tej podróży to PRAWDZIWE polecenia Bash."
+    ui_story "Wypróbuj je w swoim terminalu i poczuj moc, którą teraz dzierżysz!"
     echo
     press_enter
     main_menu
@@ -191,30 +193,31 @@ game_complete() {
 
 show_help() {
     ui_clear
-    ui_header "How to Play"
-    ui_story "Bash RPG is an educational RPG that teaches you Bash terminal commands."
+    ui_header "Jak Grać"
+    ui_story "Bash RPG to edukacyjna gra RPG, która uczy poleceń terminala Bash."
     echo
-    printf "  %bCOMBAT%b\n" "${BOLD_WHITE}" "${RESET}"
-    printf "  During battle, you answer Bash command questions to attack enemies.\n"
-    printf "  Correct answers deal damage; wrong answers mean you miss a turn.\n"
-    printf "  The enemy attacks every turn regardless.\n"
+    printf "  %bWALKA%b\n" "${BOLD_WHITE}" "${RESET}"
+    printf "  Podczas bitwy odpowiadasz na pytania o polecenia Bash, by atakować wrogów.\n"
+    printf "  Poprawne odpowiedzi zadają obrażenia; błędne oznaczają utratę kolejki.\n"
+    printf "  Wróg atakuje w każdej kolejce bez względu na wynik.\n"
     echo
-    printf "  %bCOMMANDS TAUGHT%b\n" "${BOLD_WHITE}" "${RESET}"
-    printf "  Chapter 1 – Navigation : ls, pwd, cd, mkdir, rmdir\n"
-    printf "  Chapter 2 – Files      : touch, cat, cp, mv, rm, ln, file\n"
-    printf "  Chapter 3 – Text       : grep, find, head, tail, wc, sort, uniq, cut\n"
-    printf "  Chapter 4 – Pipes      : |  >  >>  <  2>  tee  xargs\n"
-    printf "  Chapter 5 – Scripting  : variables, if, for, while, functions\n"
+    printf "  %bNAUCZANE POLECENIA%b\n" "${BOLD_WHITE}" "${RESET}"
+    printf "  Rozdział 1 – Nawigacja : ls, pwd, cd, mkdir, rmdir\n"
+    printf "  Rozdział 2 – Pliki     : touch, cat, cp, mv, rm, ln, file\n"
+    printf "  Rozdział 3 – Tekst     : grep, find, head, tail, wc, sort, uniq, cut\n"
+    printf "  Rozdział 4 – Potoki    : |  >  >>  <  2>  tee  xargs\n"
+    printf "  Rozdział 5 – Skrypty   : zmienne, if, for, while, funkcje\n"
+    printf "  Rozdział 6 – Procesy   : ps, kill, top, bg, fg, jobs, nohup, pgrep\n"
     echo
-    printf "  %bITEMS%b\n" "${BOLD_WHITE}" "${RESET}"
-    printf "  Health Potion         – restore 50 HP\n"
-    printf "  Elixir of Knowledge   – skip a challenge (reveals answer)\n"
+    printf "  %bPRZEDMIOTY%b\n" "${BOLD_WHITE}" "${RESET}"
+    printf "  Mikstura Zdrowia    – przywraca 50 PŻ\n"
+    printf "  Eliksir Wiedzy      – pomija wyzwanie (ujawnia odpowiedź)\n"
     echo
-    printf "  %bTIPS%b\n" "${BOLD_WHITE}" "${RESET}"
-    printf "  • Type just the command name (e.g. 'ls') or the full answer.\n"
-    printf "  • Answers are case-insensitive.\n"
-    printf "  • Read the explanations after battles – they are educational!\n"
-    printf "  • Save automatically after each chapter.\n"
+    printf "  %bWSKAZÓWKI%b\n" "${BOLD_WHITE}" "${RESET}"
+    printf "  • Wpisz tylko nazwę polecenia (np. 'ls') lub pełną odpowiedź.\n"
+    printf "  • Odpowiedzi nie rozróżniają wielkich i małych liter.\n"
+    printf "  • Czytaj wyjaśnienia po walkach – są edukacyjne!\n"
+    printf "  • Gra zapisuje się automatycznie po każdym rozdziale.\n"
     echo
     press_enter
 }
@@ -222,9 +225,9 @@ show_help() {
 farewell() {
     ui_clear
     echo
-    ui_center "${BOLD_CYAN}Thank you for playing Bash RPG: The Terminal Chronicles!${RESET}"
+    ui_center "${BOLD_CYAN}Dziękujemy za grę w Bash RPG: Kroniki Terminala!${RESET}"
     echo
-    ui_center "${DIM}Remember: the real treasure was the Bash commands we learned along the way.${RESET}"
+    ui_center "${DIM}Pamiętaj: prawdziwym skarbem były polecenia Bash, których się nauczyłeś.${RESET}"
     echo
 }
 
@@ -234,8 +237,8 @@ farewell() {
 
 # Verify bash version >= 4 (needed for nameref / associative arrays)
 if [[ "${BASH_VERSINFO[0]}" -lt 4 ]]; then
-    echo "Error: Bash 4.0 or higher is required to play Bash RPG." >&2
-    echo "Your version: ${BASH_VERSION}" >&2
+    echo "Błąd: Do gry w Bash RPG wymagany jest Bash 4.0 lub nowszy." >&2
+    echo "Twoja wersja: ${BASH_VERSION}" >&2
     exit 1
 fi
 

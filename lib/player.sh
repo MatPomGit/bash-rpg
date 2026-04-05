@@ -69,7 +69,7 @@ player_level_up() {
     (( PLAYER_DEFENSE += 2 ))
 
     ui_level_up "$PLAYER_LEVEL"
-    printf "  %b Max HP: %d   Attack: %d   Defense: %d%b\n" \
+    printf "  %b Maks. PŻ: %d   Atak: %d   Obrona: %d%b\n" \
         "${BOLD_WHITE}" "$PLAYER_MAX_HP" "$PLAYER_ATTACK" "$PLAYER_DEFENSE" "${RESET}"
     press_enter
 }
@@ -82,7 +82,7 @@ player_heal() {
     local amount="$1"
     PLAYER_HP=$(( PLAYER_HP + amount ))
     [[ $PLAYER_HP -gt $PLAYER_MAX_HP ]] && PLAYER_HP=$PLAYER_MAX_HP
-    printf "  %b❤  Healed %d HP  (HP: %d/%d)%b\n" "${COLOR_HP_HIGH}" "$amount" \
+    printf "  %b❤  Uleczono %d PŻ  (PŻ: %d/%d)%b\n" "${COLOR_HP_HIGH}" "$amount" \
         "$PLAYER_HP" "$PLAYER_MAX_HP" "${RESET}"
 }
 
@@ -92,7 +92,7 @@ player_damage() {
     [[ $effective -lt 1 ]] && effective=1
     PLAYER_HP=$(( PLAYER_HP - effective ))
     [[ $PLAYER_HP -lt 0 ]] && PLAYER_HP=0
-    printf "  %b💔 You took %d damage  (HP: %d/%d)%b\n" "${COLOR_HP_LOW}" "$effective" \
+    printf "  %b💔 Otrzymałeś %d obrażeń  (PŻ: %d/%d)%b\n" "${COLOR_HP_LOW}" "$effective" \
         "$PLAYER_HP" "$PLAYER_MAX_HP" "${RESET}"
 }
 
@@ -107,7 +107,7 @@ player_is_dead() {
 player_add_item() {
     local item="$1"
     PLAYER_INVENTORY+=("$item")
-    printf "  %b✦ Got: %s%b\n" "${COLOR_ITEM}" "$item" "${RESET}"
+    printf "  %b✦ Zdobyto: %s%b\n" "${COLOR_ITEM}" "$item" "${RESET}"
 }
 
 player_has_item() {
@@ -138,28 +138,28 @@ player_remove_item() {
 player_use_item() {
     local item="$1"
     case "$item" in
-        "Health Potion")
-            if player_has_item "Health Potion"; then
-                player_remove_item "Health Potion"
+        "Mikstura Zdrowia")
+            if player_has_item "Mikstura Zdrowia"; then
+                player_remove_item "Mikstura Zdrowia"
                 player_heal 50
                 return 0
             else
-                ui_error "You don't have a Health Potion!"
+                ui_error "Nie masz Mikstury Zdrowia!"
                 return 1
             fi
             ;;
-        "Elixir of Knowledge")
-            if player_has_item "Elixir of Knowledge"; then
-                player_remove_item "Elixir of Knowledge"
-                printf "  %b✨ You feel enlightened!%b\n" "${COLOR_ITEM}" "${RESET}"
+        "Eliksir Wiedzy")
+            if player_has_item "Eliksir Wiedzy"; then
+                player_remove_item "Eliksir Wiedzy"
+                printf "  %b✨ Czujesz przypływ wiedzy!%b\n" "${COLOR_ITEM}" "${RESET}"
                 return 0
             else
-                ui_error "You don't have an Elixir of Knowledge!"
+                ui_error "Nie masz Eliksiru Wiedzy!"
                 return 1
             fi
             ;;
         *)
-            ui_error "Unknown item: $item"
+            ui_error "Nieznany przedmiot: $item"
             return 1
             ;;
     esac
@@ -167,9 +167,9 @@ player_use_item() {
 
 player_show_inventory() {
     echo
-    printf "  %b=== Inventory ===%b\n" "${BOLD_WHITE}" "${RESET}"
+    printf "  %b=== Ekwipunek ===%b\n" "${BOLD_WHITE}" "${RESET}"
     if [[ ${#PLAYER_INVENTORY[@]} -eq 0 ]]; then
-        printf "  %bEmpty%b\n" "${DIM}" "${RESET}"
+        printf "  %bPusty%b\n" "${DIM}" "${RESET}"
     else
         local counts=()
         local seen=()
@@ -193,7 +193,7 @@ player_show_inventory() {
             printf "  %b%-25s%b x%d\n" "${COLOR_ITEM}" "${seen[$j]}" "${RESET}" "${counts[$j]}"
         done
     fi
-    printf "  %bGold: %d%b\n" "${COLOR_GOLD}" "$PLAYER_GOLD" "${RESET}"
+    printf "  %bZłoto: %d%b\n" "${COLOR_GOLD}" "$PLAYER_GOLD" "${RESET}"
     echo
 }
 
@@ -204,14 +204,14 @@ player_show_inventory() {
 player_show_stats() {
     echo
     ui_hr "─"
-    printf "  %b%-12s%b %s\n" "${BOLD_WHITE}" "Name:" "${RESET}" "$PLAYER_NAME"
-    printf "  %b%-12s%b %d\n" "${BOLD_WHITE}" "Level:" "${RESET}" "$PLAYER_LEVEL"
-    printf "  %b%-12s%b %d / %d\n" "${BOLD_WHITE}" "HP:" "${RESET}" "$PLAYER_HP" "$PLAYER_MAX_HP"
-    printf "  %b%-12s%b %d / %d\n" "${BOLD_WHITE}" "XP:" "${RESET}" "$PLAYER_XP" "$PLAYER_XP_NEXT"
-    printf "  %b%-12s%b %d\n" "${BOLD_WHITE}" "Attack:" "${RESET}" "$PLAYER_ATTACK"
-    printf "  %b%-12s%b %d\n" "${BOLD_WHITE}" "Defense:" "${RESET}" "$PLAYER_DEFENSE"
-    printf "  %b%-12s%b %d\n" "${BOLD_WHITE}" "Gold:" "${RESET}" "$PLAYER_GOLD"
-    printf "  %b%-12s%b %d\n" "${BOLD_WHITE}" "Area:" "${RESET}" "$CURRENT_LEVEL"
+    printf "  %b%-12s%b %s\n" "${BOLD_WHITE}" "Imię:"    "${RESET}" "$PLAYER_NAME"
+    printf "  %b%-12s%b %d\n" "${BOLD_WHITE}" "Poziom:"  "${RESET}" "$PLAYER_LEVEL"
+    printf "  %b%-12s%b %d / %d\n" "${BOLD_WHITE}" "PŻ:"     "${RESET}" "$PLAYER_HP" "$PLAYER_MAX_HP"
+    printf "  %b%-12s%b %d / %d\n" "${BOLD_WHITE}" "PD:"     "${RESET}" "$PLAYER_XP" "$PLAYER_XP_NEXT"
+    printf "  %b%-12s%b %d\n" "${BOLD_WHITE}" "Atak:"    "${RESET}" "$PLAYER_ATTACK"
+    printf "  %b%-12s%b %d\n" "${BOLD_WHITE}" "Obrona:"  "${RESET}" "$PLAYER_DEFENSE"
+    printf "  %b%-12s%b %d\n" "${BOLD_WHITE}" "Złoto:"   "${RESET}" "$PLAYER_GOLD"
+    printf "  %b%-12s%b %d\n" "${BOLD_WHITE}" "Obszar:"  "${RESET}" "$CURRENT_LEVEL"
     ui_hr "─"
     player_show_inventory
 }

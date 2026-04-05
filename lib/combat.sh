@@ -64,17 +64,17 @@ combat_start() {
         ui_enemy_status "$ENEMY_NAME" "$ENEMY_HP" "$ENEMY_MAX_HP"
         echo
         ui_hr "─"
-        printf "  %bTurn %d%b\n" "${DIM}" "$turn" "${RESET}"
+        printf "  %bKolejka %d%b\n" "${DIM}" "$turn" "${RESET}"
         ui_hr "─"
 
         # Combat menu
         echo
-        printf "  %b[1]%b Attack (answer a Bash challenge)\n" "${BOLD_CYAN}" "${RESET}"
-        printf "  %b[2]%b Use item\n" "${BOLD_CYAN}" "${RESET}"
-        printf "  %b[3]%b Show inventory\n" "${BOLD_CYAN}" "${RESET}"
-        printf "  %b[4]%b Flee (lose 20 HP)\n" "${BOLD_CYAN}" "${RESET}"
+        printf "  %b[1]%b Atakuj (odpowiedz na pytanie Bash)\n" "${BOLD_CYAN}" "${RESET}"
+        printf "  %b[2]%b Użyj przedmiotu\n" "${BOLD_CYAN}" "${RESET}"
+        printf "  %b[3]%b Pokaż ekwipunek\n" "${BOLD_CYAN}" "${RESET}"
+        printf "  %b[4]%b Uciekaj (stracisz 20 PŻ)\n" "${BOLD_CYAN}" "${RESET}"
         echo
-        ui_prompt "Your choice: "
+        ui_prompt "Twój wybór: "
         local choice
         read -r choice
 
@@ -107,12 +107,12 @@ combat_start() {
                 continue
                 ;;
             4)
-                printf "\n  %bYou flee! The enemy deals a parting blow...%b\n" "${COLOR_WARNING}" "${RESET}"
+                printf "\n  %bUciekasz! Wróg zadaje ci pożegnalny cios...%b\n" "${COLOR_WARNING}" "${RESET}"
                 player_damage $(( ENEMY_ATTACK * 2 ))
                 fled=true
                 ;;
             *)
-                ui_error "Invalid choice."
+                ui_error "Nieprawidłowy wybór."
                 continue
                 ;;
         esac
@@ -142,9 +142,9 @@ combat_player_attack() {
 
     echo
     ui_hr "─"
-    printf "  %b⚔  CHALLENGE:%b\n" "${BOLD_YELLOW}" "${RESET}"
+    printf "  %b⚔  WYZWANIE:%b\n" "${BOLD_YELLOW}" "${RESET}"
     printf "  %b%s%b\n\n" "${BOLD_WHITE}" "$CHALLENGE_QUESTION" "${RESET}"
-    ui_prompt "Your answer: "
+    ui_prompt "Twoja odpowiedź: "
     local answer
     read -r answer
 
@@ -152,17 +152,17 @@ combat_player_attack() {
         local dmg=$(( PLAYER_ATTACK + RANDOM % 5 ))
         ENEMY_HP=$(( ENEMY_HP - dmg ))
         [[ $ENEMY_HP -lt 0 ]] && ENEMY_HP=0
-        printf "\n  %b✔ Correct!%b  You strike for %b%d damage%b!\n" \
+        printf "\n  %b✔ Poprawnie!%b  Zadajesz %b%d obrażeń%b!\n" \
             "${COLOR_SUCCESS}" "${RESET}" "${BOLD_RED}" "$dmg" "${RESET}"
         printf "  %b%s%b\n" "${DIM}" "$CHALLENGE_EXPLAIN" "${RESET}"
         sleep 1
         return 0
     else
-        printf "\n  %b✘ Wrong!%b  The correct answer was: %b%s%b\n" \
+        printf "\n  %b✘ Błąd!%b  Poprawna odpowiedź to: %b%s%b\n" \
             "${COLOR_ERROR}" "${RESET}" "${COLOR_COMMAND}" \
             "$(echo "$CHALLENGE_ANSWERS" | cut -d"${SEP}" -f1)" "${RESET}"
         printf "  %b%s%b\n" "${DIM}" "$CHALLENGE_EXPLAIN" "${RESET}"
-        printf "  %bYou miss this turn!%b\n" "${COLOR_WARNING}" "${RESET}"
+        printf "  %bTracisz kolejkę!%b\n" "${COLOR_WARNING}" "${RESET}"
         sleep 1
         return 1
     fi
@@ -174,7 +174,7 @@ combat_player_attack() {
 
 combat_enemy_attack() {
     local dmg=$(( ENEMY_ATTACK + RANDOM % 5 ))
-    printf "\n  %b%s attacks you!%b\n" "${COLOR_ENEMY}" "$ENEMY_NAME" "${RESET}"
+    printf "\n  %b%s atakuje cię!%b\n" "${COLOR_ENEMY}" "$ENEMY_NAME" "${RESET}"
     player_damage "$dmg"
     [[ "${BASH_RPG_TESTING:-}" == "1" ]] || sleep 0.5
 }
@@ -185,11 +185,11 @@ combat_enemy_attack() {
 
 combat_use_item() {
     if [[ ${#PLAYER_INVENTORY[@]} -eq 0 ]]; then
-        ui_warning "Your inventory is empty!"
+        ui_warning "Twój ekwipunek jest pusty!"
         return
     fi
     player_show_inventory
-    ui_prompt "Use which item? "
+    ui_prompt "Którego przedmiotu użyć? "
     local item_name
     read -r item_name
     player_use_item "$item_name"
@@ -202,7 +202,7 @@ combat_use_item() {
 combat_victory() {
     echo
     ui_hr "═"
-    ui_center "${COLOR_SUCCESS}  ★  VICTORY!  ★  ${RESET}"
+    ui_center "${COLOR_SUCCESS}  ★  ZWYCIĘSTWO!  ★  ${RESET}"
     ui_hr "═"
     echo
     printf "  %b%s%b\n\n" "${COLOR_STORY}" "$ENEMY_VICTORY_MSG" "${RESET}"
@@ -221,10 +221,10 @@ combat_victory() {
 combat_defeat() {
     echo
     ui_hr "═"
-    ui_center "${COLOR_ERROR}  ✝  YOU HAVE FALLEN  ✝  ${RESET}"
+    ui_center "${COLOR_ERROR}  ✝  POLEGŁEŚ  ✝  ${RESET}"
     ui_hr "═"
     echo
-    printf "  %bYour journey ends here... for now.%b\n" "${COLOR_STORY}" "${RESET}"
-    printf "  %bBut a true Bash warrior never gives up!%b\n\n" "${COLOR_STORY}" "${RESET}"
+    printf "  %bTwoja przygoda kończy się tutaj... na razie.%b\n" "${COLOR_STORY}" "${RESET}"
+    printf "  %bAle prawdziwy wojownik Bash nigdy się nie poddaje!%b\n\n" "${COLOR_STORY}" "${RESET}"
     press_enter
 }
