@@ -12,22 +12,54 @@ source "${SCRIPT_DIR}/../lib/save_load.sh"
 level_05_intro() {
     ui_clear
     ui_header "Rozdział 5 – Wieża Czarodzieja"
+    ui_story "Cztery wielkie próby za tobą. Twoja moc jest imponująca – lecz nie wystarczająca."
+    ui_story "Wirus Chaosu ewoluuje. Ucieka od pojedynczych poleceń, kryje się w czasie."
+    ui_story "By go pokonać raz na zawsze, potrzebujesz Najwyższej Sztuki – Skryptowania."
     ui_story "Nareszcie przed tobą wyrasta Wieża Skryptowania Czarodzieja."
     ui_story "Błyskawice uderzają w jej iglicę, gdy zmienne skrzą się w powietrzu."
     ui_story "Wielki Czarodziej Bourne pojawia się w wybuchu fragmentów skryptów."
     echo
     ui_dialog "Wielki Czarodziej Bourne" \
-        "A więc przybyłeś, by nauczyć się najwyższej sztuki – Skryptowania Bash! Zmienne, \
-warunki, pętle i funkcje to zaklęcia, które transformują zwykłego \
-wpisywacza poleceń w prawdziwego czarodzieja powłoki. Strażnicy mojej wieży \
-testują tylko tych godnych tej wiedzy. Przeżyj ich, a zdobędziesz tytuł \
-Wojownika Bash. Ponieś porażkę, a pozostaniesz zwykłym śmiertelnikiem na zawsze." \
+        "A więc przybyłeś, by nauczyć się najwyższej sztuki – Skryptowania Bash! \
+Zmienne to pojemniki na moc, warunki to rozwidlenia losu, pętle to \
+nieskończone inkantacje, a funkcje wiążą wiedzę w wielokrotne zaklęcia. \
+Razem tworzą skrypty – autonomiczne programy, które działają bez twojego udziału. \
+To właśnie tym narzędziem pokonasz Wirusa Chaosu. Przeżyj moich strażników, \
+a zdobędziesz tytuł Wojownika Bash!" \
         "${BOLD_WHITE}"
     press_enter
 
     ui_story "Trzech strażników skryptowania stoi między tobą a tytułem Wojownika Bash."
-    ui_story "To twój ostateczny test!"
+    ui_story "To twój przedostatni test!"
     echo
+    press_enter
+}
+
+level_05_spellbook() {
+    ui_clear
+    ui_header "📖 Księga Zaklęć – Skryptowanie"
+    ui_story "Czarodziej Bourne otwiera ogromny tom oprawiony w piorunochron."
+    ui_story "\"Skryptowanie to magia wyższego rzędu. Zaklęcia, które same się wykonują.\""
+    echo
+    ui_hr "─"
+    printf "  %b%-12s%b  ✦ %-18s  %s\n" "${COLOR_COMMAND}" 'var=wartość' "${RESET}" "Runa Wiązania"   "zapisz wartość w zmiennej"
+    printf "  %b%-12s%b  ✦ %-18s  %s\n" "${COLOR_COMMAND}" '$var'        "${RESET}" "Runa Wyzwolenia" "odczytaj wartość ze zmiennej"
+    printf "  %b%-12s%b  ✦ %-18s  %s\n" "${COLOR_COMMAND}" "if/fi"       "${RESET}" "Rozwidlenie Losu" "wykonaj kod warunkowo"
+    printf "  %b%-12s%b  ✦ %-18s  %s\n" "${COLOR_COMMAND}" "for/done"    "${RESET}" "Pętla Iteracji"  "powtórz dla każdego elementu"
+    printf "  %b%-12s%b  ✦ %-18s  %s\n" "${COLOR_COMMAND}" "while/done"  "${RESET}" "Wieczna Warta"   "pętla dopóki warunek prawdziwy"
+    printf "  %b%-12s%b  ✦ %-18s  %s\n" "${COLOR_COMMAND}" "func() {}"   "${RESET}" "Pieczęć Wiedzy"  "stwórz wielokrotnego użytku zaklęcie"
+    printf "  %b%-12s%b  ✦ %-18s  %s\n" "${COLOR_COMMAND}" '$?'          "${RESET}" "Wyrocznianik"    "odczytaj wynik ostatniego polecenia"
+    ui_hr "─"
+    echo
+    ui_dialog "Wielki Czarodziej Bourne" \
+        "Zmienna to runa wiążąca – 'var=wartość' zapisuje, '\$var' odczytuje. \
+Pamiętaj: żadnych spacji wokół znaku '='! 'if/fi' to moment decyzji – \
+ścieżka rozwidla się w zależności od warunku. 'for' to inkantacja iteracji \
+po każdym elemencie. 'while' trwa dopóki warunek jest prawdziwy. \
+Funkcja 'func() {}' wiąże całe zaklęcia w jedno słowo, które potem \
+wywołujesz wielokrotnie. A '\$?' to wyrocznianik – powie ci, czy ostatnie \
+polecenie się udało (0) czy nie (cokolwiek innego). To są cztery filary skryptowania!" \
+        "${BOLD_CYAN}"
     press_enter
 }
 
@@ -152,6 +184,7 @@ jesteś prawdziwym WOJOWNIKIEM BASH! Ale jeszcze jedna próba czeka..." \
 
 run_level_05() {
     level_05_intro
+    level_05_spellbook
     level_05_encounter1 || return 1
     if ! player_is_dead; then
         level_05_encounter2 || true
