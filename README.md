@@ -32,11 +32,24 @@ You are the **Bash Warrior** – destined to save the Kingdom of Terminal from c
 
 ## How to Run
 
+### Terminal (Linux / macOS / Windows with Git Bash)
+
 ```bash
 git clone https://github.com/MatPomGit/bash-rpg.git
 cd bash-rpg
 bash bash_rpg.sh
 ```
+
+### Double-click launcher
+
+| System  | File            | What you need |
+|---------|-----------------|---------------|
+| Windows | `start.bat`     | [Git for Windows](https://gitforwindows.org/), [WSL](https://learn.microsoft.com/windows/wsl/install), [Cygwin](https://www.cygwin.com/), or [MSYS2](https://www.msys2.org/) |
+| macOS   | `start.command` | Bash 4+ (`brew install bash`) |
+
+**Windows** – double-click `start.bat`. It searches for Git Bash, then WSL, then any `bash` on your PATH. If none is found, it prints installation instructions.
+
+**macOS** – double-click `start.command` in Finder. Right-click → *Open* the first time to bypass the Gatekeeper warning.
 
 ## Project Structure
 
