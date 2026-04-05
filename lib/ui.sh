@@ -24,7 +24,7 @@ ui_resize_half_screen() {
         if [[ "$res" =~ ^([0-9]+)x([0-9]+)$ ]]; then
             local px_w=${BASH_REMATCH[1]}
             local px_h=${BASH_REMATCH[2]}
-            # Approximate character cell size: 9×18 px
+            # Approximate character cell size: 9×18 px (varies by font/terminal)
             screen_cols=$(( px_w / 9 ))
             screen_rows=$(( px_h / 18 / 2 ))
         fi
@@ -32,6 +32,11 @@ ui_resize_half_screen() {
     # Fallback: use 40 rows, 160 columns as a reasonable half-screen size
     screen_rows="${screen_rows:-40}"
     screen_cols="${screen_cols:-160}"
+    # Clamp to sane bounds to guard against unexpected xrandr output
+    [[ $screen_rows -lt 10 ]] && screen_rows=10
+    [[ $screen_rows -gt 500 ]] && screen_rows=500
+    [[ $screen_cols -lt 40 ]] && screen_cols=40
+    [[ $screen_cols -gt 1000 ]] && screen_cols=1000
     # xterm resize escape sequence
     printf '\033[8;%d;%dt' "$screen_rows" "$screen_cols"
     TERM_WIDTH=$(( screen_cols < 160 ? screen_cols : 160 ))
