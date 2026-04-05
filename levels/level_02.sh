@@ -64,7 +64,7 @@ level_02_encounter2() {
         "Demon jest zmuszony przywrócić porządek, kładąc każdy plik na właściwym miejscu." \
         60 \
         20 \
-        "Mikstura Zdrowia"
+        "Mikstura zdrowia"
 
     combat_start
 }

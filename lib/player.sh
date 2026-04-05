@@ -138,23 +138,23 @@ player_remove_item() {
 player_use_item() {
     local item="$1"
     case "$item" in
-        "Mikstura Zdrowia")
-            if player_has_item "Mikstura Zdrowia"; then
-                player_remove_item "Mikstura Zdrowia"
+        "Mikstura zdrowia")
+            if player_has_item "Mikstura zdrowia"; then
+                player_remove_item "Mikstura zdrowia"
                 player_heal 50
                 return 0
             else
-                ui_error "Nie masz Mikstury Zdrowia!"
+                ui_error "Nie masz Mikstury zdrowia!"
                 return 1
             fi
             ;;
-        "Eliksir Wiedzy")
-            if player_has_item "Eliksir Wiedzy"; then
-                player_remove_item "Eliksir Wiedzy"
+        "Eliksir wiedzy")
+            if player_has_item "Eliksir wiedzy"; then
+                player_remove_item "Eliksir wiedzy"
                 printf "  %b✨ Czujesz przypływ wiedzy!%b\n" "${COLOR_ITEM}" "${RESET}"
                 return 0
             else
-                ui_error "Nie masz Eliksiru Wiedzy!"
+                ui_error "Nie masz Eliksiru wiedzy!"
                 return 1
             fi
             ;;

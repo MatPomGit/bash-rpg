@@ -44,7 +44,7 @@ level_01_encounter1() {
         "Goblin pada ze zdezorientowania, upuszczając pomięty plan." \
         30 \
         10 \
-        "Mikstura Zdrowia"
+        "Mikstura zdrowia"
 
     combat_start
 }

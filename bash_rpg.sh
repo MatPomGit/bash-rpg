@@ -28,7 +28,7 @@ source "${GAME_DIR}/levels/level_06.sh"
 
 new_game() {
     ui_clear
-    ui_header "Nowa Gra"
+    ui_header "Nowa gra"
     ui_story "Witaj, dzielny poszukiwaczu przygód!"
     ui_story "Kraina Bash woła bohatera, który opanuje tajniki terminala."
     echo
@@ -121,12 +121,12 @@ start_adventure() {
 main_menu() {
     while true; do
         ui_title_screen
-        local options=("Nowa Gra" "Kontynuuj" "Jak Grać" "Wyjdź")
+        local options=("Nowa gra" "Kontynuuj" "Jak grać" "Wyjdź")
         if has_save; then
             options[1]="Kontynuuj  [znaleziono zapis]"
         fi
 
-        ui_menu "Menu Główne" "${options[@]}"
+        ui_menu "Menu główne" "${options[@]}"
         ui_prompt "Wybór: "
         local choice
         read -r choice
@@ -144,14 +144,14 @@ main_menu() {
 game_over_menu() {
     ui_clear
     ui_hr "═"
-    ui_center "${COLOR_ERROR}  K O N I E C   G R Y  ${RESET}"
+    ui_center "${COLOR_ERROR}  Koniec gry  ${RESET}"
     ui_hr "═"
     echo
     ui_story "Poległeś w boju..."
     ui_story "Ale każda porażka to lekcja. Powstań i opanuj terminal!"
     echo
 
-    ui_menu "Co zamierzasz zrobić?" "Wczytaj zapis" "Nowa Gra" "Wróć do Menu Głównego"
+    ui_menu "Co zamierzasz zrobić?" "Wczytaj zapis" "Nowa gra" "Wróć do menu głównego"
     ui_prompt "Wybór: "
     local choice
     read -r choice
@@ -173,7 +173,7 @@ game_over_menu() {
 game_complete() {
     ui_clear
     ui_hr "═"
-    ui_center "${BOLD_YELLOW}  ★  WOJOWNIK BASH  ★  ${RESET}"
+    ui_center "${BOLD_YELLOW}  ★  Wojownik Bash  ★  ${RESET}"
     ui_center "${BOLD_WHITE}  Kroniki Terminala  ${RESET}"
     ui_hr "═"
     echo
@@ -193,15 +193,15 @@ game_complete() {
 
 show_help() {
     ui_clear
-    ui_header "Jak Grać"
+    ui_header "Jak grać"
     ui_story "Bash RPG to edukacyjna gra RPG, która uczy poleceń terminala Bash."
     echo
-    printf "  %bWALKA%b\n" "${BOLD_WHITE}" "${RESET}"
+    printf "  %bWalka%b\n" "${BOLD_WHITE}" "${RESET}"
     printf "  Podczas bitwy odpowiadasz na pytania o polecenia Bash, by atakować wrogów.\n"
     printf "  Poprawne odpowiedzi zadają obrażenia; błędne oznaczają utratę kolejki.\n"
     printf "  Wróg atakuje w każdej kolejce bez względu na wynik.\n"
     echo
-    printf "  %bNAUCZANE POLECENIA%b\n" "${BOLD_WHITE}" "${RESET}"
+    printf "  %bNauczane polecenia%b\n" "${BOLD_WHITE}" "${RESET}"
     printf "  Rozdział 1 – Nawigacja : ls, pwd, cd, mkdir, rmdir\n"
     printf "  Rozdział 2 – Pliki     : touch, cat, cp, mv, rm, ln, file\n"
     printf "  Rozdział 3 – Tekst     : grep, find, head, tail, wc, sort, uniq, cut\n"
@@ -209,11 +209,11 @@ show_help() {
     printf "  Rozdział 5 – Skrypty   : zmienne, if, for, while, funkcje\n"
     printf "  Rozdział 6 – Procesy   : ps, kill, top, bg, fg, jobs, nohup, pgrep\n"
     echo
-    printf "  %bPRZEDMIOTY%b\n" "${BOLD_WHITE}" "${RESET}"
-    printf "  Mikstura Zdrowia    – przywraca 50 PŻ\n"
-    printf "  Eliksir Wiedzy      – pomija wyzwanie (ujawnia odpowiedź)\n"
+    printf "  %bPrzedmioty%b\n" "${BOLD_WHITE}" "${RESET}"
+    printf "  Mikstura zdrowia    – przywraca 50 PŻ\n"
+    printf "  Eliksir wiedzy      – pomija wyzwanie (ujawnia odpowiedź)\n"
     echo
-    printf "  %bWSKAZÓWKI%b\n" "${BOLD_WHITE}" "${RESET}"
+    printf "  %bWskazówki%b\n" "${BOLD_WHITE}" "${RESET}"
     printf "  • Wpisz tylko nazwę polecenia (np. 'ls') lub pełną odpowiedź.\n"
     printf "  • Odpowiedzi nie rozróżniają wielkich i małych liter.\n"
     printf "  • Czytaj wyjaśnienia po walkach – są edukacyjne!\n"
@@ -242,4 +242,6 @@ if [[ "${BASH_VERSINFO[0]}" -lt 4 ]]; then
     exit 1
 fi
 
+ui_resize_half_screen
+ui_startup_animation
 main_menu

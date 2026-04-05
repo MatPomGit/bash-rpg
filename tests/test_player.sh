@@ -88,25 +88,25 @@ assert_true "dead when HP<0" 'player_is_dead'
 
 # ── inventory ──────────────────────────────────────────────────────
 player_create "TestHero"
-player_add_item "Mikstura Zdrowia" > /dev/null
-player_add_item "Mikstura Zdrowia" > /dev/null
-player_add_item "Eliksir Wiedzy" > /dev/null
-assert_true "ma Miksturę Zdrowia"       'player_has_item "Mikstura Zdrowia"'
-assert_true "ma Eliksir Wiedzy" 'player_has_item "Eliksir Wiedzy"'
+player_add_item "Mikstura zdrowia" > /dev/null
+player_add_item "Mikstura zdrowia" > /dev/null
+player_add_item "Eliksir wiedzy" > /dev/null
+assert_true "ma Miksturę Zdrowia"       'player_has_item "Mikstura zdrowia"'
+assert_true "ma Eliksir Wiedzy" 'player_has_item "Eliksir wiedzy"'
 assert_true "nie ma Miecza"                '! player_has_item "Miecz"'
 assert_eq "ekwipunek ma 3 przedmioty" "3" "${#PLAYER_INVENTORY[@]}"
 
-player_remove_item "Mikstura Zdrowia" > /dev/null
+player_remove_item "Mikstura zdrowia" > /dev/null
 assert_eq "usuń jedną miksturę, pozostają 2" "2" "${#PLAYER_INVENTORY[@]}"
-assert_true "nadal ma jedną miksturę" 'player_has_item "Mikstura Zdrowia"'
+assert_true "nadal ma jedną miksturę" 'player_has_item "Mikstura zdrowia"'
 
 # ── player_use_item (Health Potion) ────────────────────────────────
 player_create "TestHero"
 PLAYER_HP=50
-player_add_item "Mikstura Zdrowia" > /dev/null
-player_use_item "Mikstura Zdrowia" > /dev/null
+player_add_item "Mikstura zdrowia" > /dev/null
+player_use_item "Mikstura zdrowia" > /dev/null
 assert_eq "mikstura leczy 50 PŻ" "100" "$PLAYER_HP"
-assert_true "mikstura zużyta z ekwipunku" '! player_has_item "Mikstura Zdrowia"'
+assert_true "mikstura zużyta z ekwipunku" '! player_has_item "Mikstura zdrowia"'
 
 echo
 echo "  Player Tests: ${PASS} passed, ${FAIL} failed"
