@@ -12,23 +12,54 @@ source "${SCRIPT_DIR}/../lib/save_load.sh"
 level_03_intro() {
     ui_clear
     ui_header "Rozdział 3 – Świątynia Tekstu"
+    ui_story "Jaskinia Plików jest oczyszczona, a ty czujesz rosnącą moc w dłoniach."
+    ui_story "Jednak Wirus Chaosu zdążył ukryć swoje tajne plany głębiej – w strumieniach tekstu."
+    ui_story "Miliony linii danych spływają po ścianach, zaszyfrowane i pomieszane."
     ui_story "Przed tobą wznosi się starożytna Świątynia Tekstu, wykuta z czystego obsydianu."
     ui_story "Miliony linii tekstu spływają po jej ścianach jak wodospady."
     ui_story "Uczony w szatach kłania się, gdy się zbliżasz."
     echo
     ui_dialog "Uczony Regex" \
-        "Ach, dzielna dusza szuka mądrości przetwarzania tekstu! Strażnicy świątyni \
-władają mocą słów – potrafią ukrywać wzorce, mieszać kolejności i \
-tonąć cię w niezorganizowanych danych. By ich pokonać, musisz opanować \
-'grep' do wyszukiwania, 'find' do lokalizowania, 'head' i 'tail' do \
-próbkowania, 'wc' do liczenia, 'sort' do porządkowania oraz 'uniq' \
-do deduplikacji. Oby twoje wzorce były silne!" \
+        "Ach, dzielna dusza szuka mądrości przetwarzania tekstu! Wirus Chaosu \
+ukrył swoje rozkazy wśród setek tysięcy linii danych. By je znaleźć, \
+musisz opanować Sztukę Wzorców – szukanie z 'grep', lokalizowanie z 'find', \
+próbkowanie z 'head' i 'tail', liczenie z 'wc', porządkowanie z 'sort' \
+i deduplikację z 'uniq'. Oby twoje wzorce były silne!" \
         "${BOLD_WHITE}"
     press_enter
 
-    ui_story "Trzech starożytnych strażników broni Świątyni Tekstu."
+    ui_story "Starożytni strażnicy bronią Świątyni Tekstu przed tymi, co szukają prawdy."
     ui_story "Zmierz się z nimi, by odblokować Sekrety Dopasowywania Wzorców."
     echo
+    press_enter
+}
+
+level_03_spellbook() {
+    ui_clear
+    ui_header "📖 Księga Zaklęć – Tekst"
+    ui_story "Uczony Regex siada i rozkłada przed tobą zwój pełen symboli i wzorców."
+    ui_story "\"Tekst to język wszechświata terminala. Naucz się go czytać i pisać.\""
+    echo
+    ui_hr "─"
+    printf "  %b%-7s%b  ✦ %-20s  %s\n" "${COLOR_COMMAND}" "grep"  "${RESET}" "Oko Wzorców"       "szukaj wzorców w tekście"
+    printf "  %b%-7s%b  ✦ %-20s  %s\n" "${COLOR_COMMAND}" "find"  "${RESET}" "Tropiciel"         "lokalizuj pliki w systemie"
+    printf "  %b%-7s%b  ✦ %-20s  %s\n" "${COLOR_COMMAND}" "head"  "${RESET}" "Pierwsze Spojrzenie" "wyświetl pierwsze N linii"
+    printf "  %b%-7s%b  ✦ %-20s  %s\n" "${COLOR_COMMAND}" "tail"  "${RESET}" "Ostatnie Słowo"    "wyświetl ostatnie N linii"
+    printf "  %b%-7s%b  ✦ %-20s  %s\n" "${COLOR_COMMAND}" "wc"    "${RESET}" "Runa Liczenia"     "licz linie, słowa i znaki"
+    printf "  %b%-7s%b  ✦ %-20s  %s\n" "${COLOR_COMMAND}" "sort"  "${RESET}" "Zaklęcie Porządku" "posortuj linie tekstu"
+    printf "  %b%-7s%b  ✦ %-20s  %s\n" "${COLOR_COMMAND}" "uniq"  "${RESET}" "Pieczęć Jedyności" "usuń zduplikowane linie"
+    printf "  %b%-7s%b  ✦ %-20s  %s\n" "${COLOR_COMMAND}" "cut"   "${RESET}" "Ostrze Precyzji"   "wytnij kolumny z tekstu"
+    ui_hr "─"
+    echo
+    ui_dialog "Uczony Regex" \
+        "'grep' – Oko Wzorców – wypatrzy każde słowo w oceanie danych. Przekaż \
+mu wzorzec, a on znajdzie każdą linię, w której on się pojawia. \
+'find' jako Tropiciel przeszuka cały system plików w twoim imieniu. \
+'head' i 'tail' dają ci szybki wgląd w początek i koniec pliku. \
+'wc' zlicza – linie, słowa, bajty. 'sort' zaprowadza porządek \
+w chaosie. 'uniq' wymiata duplikaty. 'cut' pozwala wyciągnąć \
+dokładnie tę kolumnę danych, której szukasz. Razem są niepowstrzymane!" \
+        "${BOLD_CYAN}"
     press_enter
 }
 
@@ -152,6 +183,7 @@ połączone z potokami, uczynią cię niepokonanym!" \
 
 run_level_03() {
     level_03_intro
+    level_03_spellbook
     level_03_encounter1 || return 1
     if ! player_is_dead; then
         level_03_encounter2 || true

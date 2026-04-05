@@ -12,7 +12,10 @@ source "${SCRIPT_DIR}/../lib/save_load.sh"
 level_02_intro() {
     ui_clear
     ui_header "Rozdział 2 – Jaskinia Plików"
-    ui_story "Za lasem leży wejście do Jaskini Plików."
+    ui_story "Las Nawigacji jest za tobą. Twoje pierwsze zaklęcia płyną już w żyłach."
+    ui_story "Lecz Wirus Chaosu nie śpi – jego macki sięgają głębiej niż gałęzie lasu."
+    ui_story "Przed tobą, wyryta w skale, zieje ciemna szczelina: Jaskinia Plików."
+    ui_story "To tu Wirus ukrywa skradzione dane, miesza pliki i niszczy archiwa."
     ui_story "Ściany jaskini wyłożone są kryształami w kształcie ikon plików."
     ui_story "Tajemniczy archiwista siedzi przy wejściu, polerując zwój."
     echo
@@ -20,14 +23,42 @@ level_02_intro() {
         "Witaj, nawigatorze! Jaskinia przed tobą rządzona jest przez stwory, które \
 niszczą, ukrywają i usuwają pliki. By przeżyć, musisz opanować operacje \
 na plikach – tworzenie z 'touch', czytanie z 'cat', kopiowanie z 'cp', \
-przenoszenie z 'mv' i budząca postrach 'rm', która niszczy bez litości. \
+przenoszenie z 'mv' i budzącą postrach 'rm', która niszczy bez litości. \
 Uważaj – w odróżnieniu od świata powyżej, tutaj nie ma cofania!" \
         "${BOLD_WHITE}"
     press_enter
 
-    ui_story "Trzech strażników chroni Jaskinię Plików."
-    ui_story "Pokonaj ich, by zdobyć Traktat Mistrzostwa Plików."
+    ui_story "Strażnicy chronią Jaskinię Plików przed każdym, kto chce zaprowadzić porządek."
+    ui_story "Pokonaj ich, by zdobyć Traktat Mistrzostwa Plików i ruszyć dalej."
     echo
+    press_enter
+}
+
+level_02_spellbook() {
+    ui_clear
+    ui_header "📖 Księga Zaklęć – Pliki"
+    ui_story "Archiwista Pergamin rozwija stary zwój i wskazuje na wyryte w nim runy."
+    ui_story "\"Pliki to istota każdego systemu. Opanuj je, a nic nie zdoła cię zaskoczyć.\""
+    echo
+    ui_hr "─"
+    printf "  %b%-7s%b  ✦ %-18s  %s\n" "${COLOR_COMMAND}" "touch"  "${RESET}" "Przywołanie"      "stwórz nowy, pusty plik"
+    printf "  %b%-7s%b  ✦ %-18s  %s\n" "${COLOR_COMMAND}" "cat"    "${RESET}" "Czytanie Zwoju"   "wyświetl zawartość pliku"
+    printf "  %b%-7s%b  ✦ %-18s  %s\n" "${COLOR_COMMAND}" "cp"     "${RESET}" "Duplikacja"       "skopiuj plik w nowe miejsce"
+    printf "  %b%-7s%b  ✦ %-18s  %s\n" "${COLOR_COMMAND}" "mv"     "${RESET}" "Translokacja"     "przenieś lub zmień nazwę pliku"
+    printf "  %b%-7s%b  ✦ %-18s  %s\n" "${COLOR_COMMAND}" "rm"     "${RESET}" "Unicestwienie"    "usuń plik – bezpowrotnie!"
+    printf "  %b%-7s%b  ✦ %-18s  %s\n" "${COLOR_COMMAND}" "ln -s"  "${RESET}" "Więź Cienia"      "stwórz dowiązanie symboliczne"
+    printf "  %b%-7s%b  ✦ %-18s  %s\n" "${COLOR_COMMAND}" "file"   "${RESET}" "Prawdziwe Oblicze" "ujawnij prawdziwy typ pliku"
+    printf "  %b%-7s%b  ✦ %-18s  %s\n" "${COLOR_COMMAND}" "man"    "${RESET}" "Wyrocznia"        "pytaj wyrocznię o każde zaklęcie"
+    ui_hr "─"
+    echo
+    ui_dialog "Archiwista Pergamin" \
+        "Zapamiętaj: 'touch' przywołuje nowy plik z nicości. 'cat' pozwoli ci \
+zajrzeć do jego wnętrza bez otwierania. 'cp' to duplikacja – oryginał zostaje. \
+'mv' przenosi lub przemianowuje bez śladu. Ale 'rm' to Unicestwienie – \
+raz użyte, nie ma odwołania! 'ln -s' tworzy cień pliku w innym miejscu. \
+'file' zdradzi ci co tak naprawdę kryje się pod rozszerzeniem. \
+A 'man' to wyrocznia – pyta ją, gdy nie znasz zaklęcia!" \
+        "${BOLD_CYAN}"
     press_enter
 }
 
@@ -150,6 +181,7 @@ wielka moc rodzi wielką odpowiedzialność. W Bash nie ma kosza!" \
 
 run_level_02() {
     level_02_intro
+    level_02_spellbook
     level_02_encounter1 || return 1
     if ! player_is_dead; then
         level_02_encounter2 || true

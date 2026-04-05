@@ -12,21 +12,54 @@ source "${SCRIPT_DIR}/../lib/save_load.sh"
 level_01_intro() {
     ui_clear
     ui_header "Rozdział 1 – Las Nawigacji"
-    ui_story "Stoisz na skraju Zaczarowanego Lasu Bash."
-    ui_story "Stare drzewa wznoszą się ku niebu, ich kora pokryta tajemniczymi symbolami."
+    ui_story "Królestwo Terminala płonie."
+    ui_story "Mroczna siła – Wirus Chaosu – wdarła się do systemów, plików i procesów."
+    ui_story "Katalogi są poplątane, dane skradzione, a procesy szaleją bez kontroli."
+    ui_story "Tylko mistrz Bash może przepędzić chaos i przywrócić porządek w królestwie."
+    echo
+    ui_story "Ty, młody adept, opuściłeś wioskę Początkujących z jednym postanowieniem:"
+    ui_story "nauczyć się Starożytnej Sztuki Bash i ocalić Królestwo Terminala."
+    ui_story "Twoja podróż zaczyna się tutaj – na skraju Zaczarowanego Lasu Bash."
+    ui_story "Stare drzewa wznoszą się ku niebu, ich kora pokryta tajemniczymi runami."
     ui_story "Stary pustelnik blokuje ścieżkę."
     echo
     ui_dialog "Pustelnik Siwobrodek" \
         "Stój, wędrowcze! Ten las kryje wiele niebezpieczeństw dla tych, którzy \
 nie znają praw terminala. Stwory tutaj strzegą sekretów NAWIGACJI – \
 sztuki poruszania się po katalogach, listowania ich zawartości \
-i tworzenia nowych ścieżek. Ucz się dobrze, a las ustąpi twojej woli." \
+i tworzenia nowych ścieżek. Ucz się dobrze, a las ustąpi twojej woli. \
+A pamiętaj – to dopiero pierwsza z sześciu prób, które czekają na twojej drodze!" \
         "${BOLD_WHITE}"
     press_enter
 
-    ui_story "Musisz pokonać trzech strażników, by przekroczyć Las Nawigacji."
+    ui_story "Musisz pokonać strażników, by przekroczyć Las Nawigacji."
     ui_story "Każda walka sprawdza twoją znajomość poleceń nawigacyjnych Bash."
     echo
+    press_enter
+}
+
+level_01_spellbook() {
+    ui_clear
+    ui_header "📖 Księga Zaklęć – Nawigacja"
+    ui_story "Siwobrodek wyjmuje z płaszcza starą księgę pokrytą świecącymi runami."
+    ui_story "\"Każde polecenie to zaklęcie. Ucz się ich nazw i mocy, zanim ruszysz dalej.\""
+    echo
+    ui_hr "─"
+    printf "  %b%-7s%b  ✦ %-18s  %s\n" "${COLOR_COMMAND}" "ls"    "${RESET}" "Wzrok Sowy"       "ujrzyj wszystko, co leży w katalogu"
+    printf "  %b%-7s%b  ✦ %-18s  %s\n" "${COLOR_COMMAND}" "pwd"   "${RESET}" "Kamień Miejsca"   "poznaj swoje dokładne położenie w lesie"
+    printf "  %b%-7s%b  ✦ %-18s  %s\n" "${COLOR_COMMAND}" "cd"    "${RESET}" "Teleportacja"     "przenieś się do dowolnego katalogu"
+    printf "  %b%-7s%b  ✦ %-18s  %s\n" "${COLOR_COMMAND}" "mkdir" "${RESET}" "Stworzenie"       "wykuj nową ścieżkę z nicości"
+    printf "  %b%-7s%b  ✦ %-18s  %s\n" "${COLOR_COMMAND}" "rmdir" "${RESET}" "Rozproszenie"     "wymaż pusty katalog ze świata"
+    ui_hr "─"
+    echo
+    ui_dialog "Pustelnik Siwobrodek" \
+        "'ls' – Wzrok Sowy – otworzy ci oczy na zawartość każdego katalogu. \
+'pwd' – Kamień Miejsca – nigdy nie pozwoli ci się zgubić w gąszczu ścieżek. \
+'cd' da ci moc swobodnego poruszania się między królestwami katalogów. \
+'mkdir' stworzy nowe ścieżki tam, gdzie ich nie ma, \
+a 'rmdir' usunie te, których już nie potrzebujesz. \
+To pięć filarów, na których stoi cała nawigacja terminala!" \
+        "${BOLD_CYAN}"
     press_enter
 }
 
@@ -146,6 +179,7 @@ będą ci służyć w każdym zakątku terminala." \
 
 run_level_01() {
     level_01_intro
+    level_01_spellbook
     level_01_encounter1 || return 1
     if ! player_is_dead; then
         level_01_encounter2 || true

@@ -12,15 +12,19 @@ source "${SCRIPT_DIR}/../lib/save_load.sh"
 level_04_intro() {
     ui_clear
     ui_header "Rozdział 4 – Rzeka Potoków"
+    ui_story "Pokonałeś strażników tekstu. Twój arsenał zaklęć rośnie z każdą chwilą."
+    ui_story "Lecz Wirus Chaosu uderzył w samo serce przepływu danych – Rzekę Potoków."
+    ui_story "Bez sprawnych połączeń między poleceniami, cały system terminala zginie."
     ui_story "Docierasz do brzegów legendarnej Rzeki Potoków."
     ui_story "Dane płyną jak woda, przekierowywane przez tajemnicze symbole wyryte w kamieniu."
     ui_story "Przewoźnik pcha tratwę ze złączonych rur ku tobie."
     echo
     ui_dialog "Przewoźnik Przekierowanie" \
         "By przeprawić się przez Rzekę Potoków, musisz rozumieć przepływ danych. \
-Symbol potoku '|' wysyła wyjście jednego polecenia do drugiego. \
-Nawiasy '>' i '>>' przekierowują do plików. '<' pobiera z plików. \
-'2>' przechwytuje błędy. A 'tee' rozdziela przepływ na dwa strumienie. \
+Symbol potoku '|' wysyła wyjście jednego polecenia do drugiego jak wodę przez rurę. \
+Nawiasy '>' i '>>' przekierowują dane do plików – jeden niszczy stare, drugi dołącza. \
+'<' pobiera dane z plików. '2>' przechwytuje błędy jak sieć łowi ryby. \
+A 'tee' rozdziela przepływ na dwa strumienie jednocześnie. \
 Opanuj przekierowania, a opanujesz samą krew powłoki!" \
         "${BOLD_WHITE}"
     press_enter
@@ -28,6 +32,33 @@ Opanuj przekierowania, a opanujesz samą krew powłoki!" \
     ui_story "Trzy potwory rzeczne strzegą przeprawy."
     ui_story "Tylko mistrz potoków i przekierowań może przejść."
     echo
+    press_enter
+}
+
+level_04_spellbook() {
+    ui_clear
+    ui_header "📖 Księga Zaklęć – Potoki i Przekierowania"
+    ui_story "Przewoźnik wyciąga z rękawa metalową tabliczkę z wyrytymi symbolami."
+    ui_story "\"Te znaki to nie litery – to mosty między poleceniami. Naucz się ich!\""
+    echo
+    ui_hr "─"
+    printf "  %b%-6s%b  ✦ %-20s  %s\n" "${COLOR_COMMAND}" "|"     "${RESET}" "Most Mocy"          "wyślij stdout do stdin następnego"
+    printf "  %b%-6s%b  ✦ %-20s  %s\n" "${COLOR_COMMAND}" ">"     "${RESET}" "Pieczęć Danych"     "przekieruj stdout do pliku (nadpisz)"
+    printf "  %b%-6s%b  ✦ %-20s  %s\n" "${COLOR_COMMAND}" ">>"    "${RESET}" "Łańcuch Wpisu"      "dołącz stdout do pliku (dołącz)"
+    printf "  %b%-6s%b  ✦ %-20s  %s\n" "${COLOR_COMMAND}" "<"     "${RESET}" "Runa Przywołania"   "przekieruj plik na stdin"
+    printf "  %b%-6s%b  ✦ %-20s  %s\n" "${COLOR_COMMAND}" "2>"    "${RESET}" "Pułapka Błędów"     "przekieruj stderr do pliku"
+    printf "  %b%-6s%b  ✦ %-20s  %s\n" "${COLOR_COMMAND}" "tee"   "${RESET}" "Rozdwojenie"        "wyświetl I zapisz jednocześnie"
+    printf "  %b%-6s%b  ✦ %-20s  %s\n" "${COLOR_COMMAND}" "xargs" "${RESET}" "Tkanie Argumentów"  "buduj argumenty z linii stdin"
+    ui_hr "─"
+    echo
+    ui_dialog "Przewoźnik Przekierowanie" \
+        "Każdy z tych symboli to most lub zapora na rzece danych. '|' łączy \
+polecenia – wyjście pierwszego staje się wejściem drugiego. '>' to tama, \
+która skierowuje dane do pliku – ale uwaga, niszczy co było! '>>' delikatniej \
+dołącza do istniejącego pliku. '<' odwraca przepływ – plik zasila polecenie. \
+'2>' przechwytuje błędy oddzielnie. 'tee' rozdziela rzekę na dwa kanały. \
+Łącz je razem jak rury wodociągu, a zbudujesz potężne wodociągi danych!" \
+        "${BOLD_CYAN}"
     press_enter
 }
 
@@ -151,6 +182,7 @@ Wieża Czarodzieja czeka na ciebie na drugim brzegu!" \
 
 run_level_04() {
     level_04_intro
+    level_04_spellbook
     level_04_encounter1 || return 1
     if ! player_is_dead; then
         level_04_encounter2 || true

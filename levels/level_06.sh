@@ -12,22 +12,55 @@ source "${SCRIPT_DIR}/../lib/save_load.sh"
 level_06_intro() {
     ui_clear
     ui_header "Rozdział 6 – Cytadela Procesów"
+    ui_story "Pięć prób za sobą. Jesteś teraz Wojownikiem Bash – ale misja jeszcze trwa."
+    ui_story "Wirus Chaosu uciekł na ostatnią linię obrony: Cytadelę Procesów."
+    ui_story "Zainfekował samo jądro systemu, uruchamiając niekontrolowane procesy."
+    ui_story "Zombie procesów zapełniają tablicę, osierocone programy pożerają CPU."
     ui_story "Na wzgórzu za Wieżą Czarodzieja stoi mroczna Cytadela Procesów."
     ui_story "Jej mury drżą od nieustannie działających procesów i nieskończonych pętli."
     ui_story "Przy bramie czeka postać w zbroi z tablicami PID-ów."
     echo
     ui_dialog "Strażnik Procesów Daemon" \
-        "Wojowniku Bash! Twoja przygoda nie dobiegła jeszcze końca. Ta cytadela \
-kryje ostateczny sekret terminala – zarządzanie procesami. Tutaj nauczysz się \
-jak widzieć wszystkie uruchomione procesy, jak je zatrzymywać, jak przenosić \
-między tłem i pierwszym planem. Opanuj te umiejętności, a będziesz prawdziwym \
-władcą systemu. Ale najpierw musisz pokonać moich trzech strażników!" \
+        "Wojowniku Bash! Cytadela kryje ostateczny sekret terminala – zarządzanie \
+procesami. Musisz nauczyć się jak widzieć wszystkie uruchomione procesy za \
+pomocą 'ps', jak je zatrzymywać z 'kill', jak monitorować z 'top' i jak \
+zarządzać tłem z 'bg' i 'fg'. To ostatnia linia obrony przeciw Wirusowi Chaosu. \
+Pokonaj moich strażników i wypędź Wirusa raz na zawsze!" \
         "${BOLD_WHITE}"
     press_enter
 
     ui_story "Trzy niebezpieczne istoty strzegą Cytadeli Procesów."
     ui_story "To jest twoje ostateczne wyzwanie, Wojowniku Bash!"
     echo
+    press_enter
+}
+
+level_06_spellbook() {
+    ui_clear
+    ui_header "📖 Księga Zaklęć – Zarządzanie Procesami"
+    ui_story "Daemon wyjmuje metalową tablicę z wygrawerowanymi PID-ami i symbolami."
+    ui_story "\"Procesy to żywe istoty w twoim systemie. Naucz się nimi władać.\""
+    echo
+    ui_hr "─"
+    printf "  %b%-7s%b  ✦ %-20s  %s\n" "${COLOR_COMMAND}" "ps"     "${RESET}" "Oko Procesów"      "wyświetl wszystkie procesy"
+    printf "  %b%-7s%b  ✦ %-20s  %s\n" "${COLOR_COMMAND}" "kill"   "${RESET}" "Ostateczny Sygnał" "zakończ proces (wyślij sygnał)"
+    printf "  %b%-7s%b  ✦ %-20s  %s\n" "${COLOR_COMMAND}" "top"    "${RESET}" "Wszechwidzące Oko" "monitoruj procesy w czasie rzeczywistym"
+    printf "  %b%-7s%b  ✦ %-20s  %s\n" "${COLOR_COMMAND}" "bg"     "${RESET}" "Cień Tła"          "wyślij zadanie do tła"
+    printf "  %b%-7s%b  ✦ %-20s  %s\n" "${COLOR_COMMAND}" "fg"     "${RESET}" "Przywołanie"       "przenieś zadanie na pierwszy plan"
+    printf "  %b%-7s%b  ✦ %-20s  %s\n" "${COLOR_COMMAND}" "jobs"   "${RESET}" "Zwój Zadań"        "wyświetl zadania bieżącej powłoki"
+    printf "  %b%-7s%b  ✦ %-20s  %s\n" "${COLOR_COMMAND}" "nohup"  "${RESET}" "Tarcza Nieśmierci" "uruchom odpornie na rozłączenie"
+    printf "  %b%-7s%b  ✦ %-20s  %s\n" "${COLOR_COMMAND}" "pgrep"  "${RESET}" "Łowca z Imienia"   "znajdź PID procesu po jego nazwie"
+    ui_hr "─"
+    echo
+    ui_dialog "Strażnik Procesów Daemon" \
+        "'ps' to twoje Oko Procesów – pokaże ci każdy działający program z jego \
+PID-em. 'kill' to Ostateczny Sygnał – domyślnie SIGTERM (15), ale 'kill -9' \
+to SIGKILL, któremu nic się nie oprze. 'top' to Wszechwidzące Oko – żywy \
+widok wszystkich procesów. 'bg' wyśle zatrzymany proces do tła, 'fg' go \
+wróci. 'jobs' pokaże co aktualnie zarządzasz. 'nohup' to Tarcza Nieśmierci \
+– proces uruchomiony z nohup przeżyje nawet wylogowanie. \
+'pgrep' znajdzie PID po nazwie, bez konieczności skanowania całego 'ps'!" \
+        "${BOLD_CYAN}"
     press_enter
 }
 
@@ -156,6 +189,7 @@ i 'nohup' by uodparniać procesy. Jesteś teraz absolutnym WŁADCĄ TERMINALA!" 
 
 run_level_06() {
     level_06_intro
+    level_06_spellbook
     level_06_encounter1 || return 1
     if ! player_is_dead; then
         level_06_encounter2 || true
