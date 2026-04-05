@@ -37,7 +37,7 @@ NAV_ANSWERS=(
     "-a§ls -a§ls -la§-la"
     "-l§ls -l§ls -la§-la"
     "cd ..§.."
-    "lists all files with details including hidden§shows all files with permissions§wyświetla wszystkie pliki ze szczegółami"
+    "wyświetla wszystkie pliki ze szczegółami włącznie z ukrytymi§pokazuje pliki z uprawnieniami§ls -la"
     "cd ~§cd§~"
 )
 NAV_HINTS=(
@@ -185,16 +185,16 @@ PIPE_QUESTIONS=(
     "Co oznacza '2>&1'?"
 )
 PIPE_ANSWERS=(
-    "|§pipe"
-    ">§greater than"
-    ">>§double greater than"
-    "<§less than"
+    "|§pipe§potok"
+    ">§znak większości"
+    ">>§podwójny znak większości"
+    "<§znak mniejszości"
     "2>"
     "tee"
     "2>&1§>&§> file 2>&1"
-    "the null device§a black hole§a device that discards all input§/dev/null discards§urządzenie null§czarna dziura"
+    "urządzenie null§czarna dziura§urządzenie odrzucające dane§/dev/null odrzuca wszystko"
     "xargs"
-    "redirects stderr to stdout§merges stderr into stdout§sends stderr to stdout§przekierowuje stderr na stdout"
+    "przekierowuje stderr na stdout§łączy stderr ze stdout§wysyła stderr do stdout"
 )
 PIPE_HINTS=(
     "Wygląda jak rura na klawiaturze – pionowa kreska."
