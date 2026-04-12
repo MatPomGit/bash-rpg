@@ -11,6 +11,7 @@ You are the **Bash Warrior** – destined to save the Kingdom of Terminal from c
 - 🗡️ **Turn-based combat** – answer Bash command questions to attack enemies
 - 📈 **RPG progression** – XP, levels, HP, attack/defense stats
 - 🎒 **Inventory system** – collect potions and magical items
+- 🛒 **Inter-level shop** – buy items between chapters, with prices scaled by current level
 - 💾 **Auto-save** – progress saved to `~/.bash_rpg/save.dat` after each chapter
 - 🎨 **Colorful terminal UI** – ANSI colors, ASCII art, status bars
 - 📚 **50+ Bash challenges** across 5 categories
@@ -180,6 +181,7 @@ lib/
   challenges.sh      ← Bash-command challenge database
   combat.sh          ← turn-based combat engine
   save_load.sh       ← save/load game state
+  shop.sh            ← inter-level shop and dynamic pricing
 levels/
   level_01.sh        ← Forest of Navigation
   level_02.sh        ← Cave of Files
@@ -206,8 +208,17 @@ bash tests/run_tests.sh
 3. Type the correct Bash command or answer to deal damage.
 4. Wrong answers miss your turn – the enemy still attacks!
 5. Use **Health Potions** from your inventory to survive tough fights.
-6. After each chapter, read the **command summaries** to reinforce learning.
-7. Your progress is **auto-saved** – you can quit and continue later.
+6. After each chapter, visit the **shop** to spend gold on useful consumables.
+7. Shop prices scale with `CURRENT_LEVEL`, so your economy stays balanced throughout the campaign.
+8. Your progress is **auto-saved** – you can quit and continue later.
+
+### Shop Between Chapters
+
+After completing a level, you can enter a shop before continuing.
+
+- Items include healing, hint-restoring elixirs, temporary shields, and status-cleansing consumables.
+- Prices are dynamically scaled with `CURRENT_LEVEL` (higher chapters = higher prices).
+- Item names with spaces are fully supported in inventory and save files.
 
 ### Combat Tips
 

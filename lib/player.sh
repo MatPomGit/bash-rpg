@@ -30,6 +30,9 @@ CURRENT_LEVEL=1
 # Domyślne wartości efektów bojowych (faktycznie wykorzystywane przez lib/combat.sh).
 # Utrzymujemy je także tutaj, aby użycie przedmiotów poza walką nie powodowało błędów.
 PLAYER_SHIELD_VALUE=${PLAYER_SHIELD_VALUE:-0}
+PLAYER_STATUS_STUN_TURNS=${PLAYER_STATUS_STUN_TURNS:-0}
+PLAYER_STATUS_BLEED_TURNS=${PLAYER_STATUS_BLEED_TURNS:-0}
+PLAYER_STATUS_BLEED_DAMAGE=${PLAYER_STATUS_BLEED_DAMAGE:-0}
 ENEMY_STATUS_BLEED_TURNS=${ENEMY_STATUS_BLEED_TURNS:-0}
 ENEMY_STATUS_BLEED_DAMAGE=${ENEMY_STATUS_BLEED_DAMAGE:-0}
 
@@ -164,13 +167,28 @@ player_use_item() {
                 return 1
             fi
             ;;
-        "Eliksir wiedzy")
-            if player_has_item "Eliksir wiedzy"; then
-                player_remove_item "Eliksir wiedzy"
-                printf "  %b✨ Czujesz przypływ wiedzy!%b\n" "${COLOR_ITEM}" "${RESET}"
+        "Eliksir wiedzy"|"Mikstura wiedzy")
+            local knowledge_item="${item}"
+            if player_has_item "$knowledge_item"; then
+                player_remove_item "$knowledge_item"
+                TALENT_KNOWLEDGE_HINTS=$(( TALENT_KNOWLEDGE_HINTS + 2 ))
+                printf "  %b🧠 Twoja wiedza rośnie (+2 podpowiedzi, razem: %d).%b\n" \
+                    "${COLOR_ITEM}" "$TALENT_KNOWLEDGE_HINTS" "${RESET}"
                 return 0
             else
-                ui_error "Nie masz Eliksiru wiedzy!"
+                ui_error "Nie masz przedmiotu: ${knowledge_item}!"
+                return 1
+            fi
+            ;;
+        "Mikstura many")
+            if player_has_item "Mikstura many"; then
+                player_remove_item "Mikstura many"
+                TALENT_KNOWLEDGE_HINTS=$(( TALENT_KNOWLEDGE_HINTS + 1 ))
+                printf "  %b🔹 Odzyskujesz manę wiedzy (+1 podpowiedź, razem: %d).%b\n" \
+                    "${COLOR_HINT}" "$TALENT_KNOWLEDGE_HINTS" "${RESET}"
+                return 0
+            else
+                ui_error "Nie masz Mikstury many!"
                 return 1
             fi
             ;;
@@ -198,6 +216,35 @@ player_use_item() {
                 return 0
             else
                 ui_error "Nie masz Bombki krwawienia!"
+                return 1
+            fi
+            ;;
+        "Tarcza tymczasowa")
+            if player_has_item "Tarcza tymczasowa"; then
+                player_remove_item "Tarcza tymczasowa"
+                # Zapewniamy większą osłonę na wymagające starcia.
+                PLAYER_SHIELD_VALUE=$(( PLAYER_SHIELD_VALUE + 40 ))
+                printf "  %b🛡 Aktywujesz Tarczę tymczasową (+40, łącznie: %d).%b\n" \
+                    "${BOLD_CYAN}" "$PLAYER_SHIELD_VALUE" "${RESET}"
+                return 0
+            else
+                ui_error "Nie masz Tarczy tymczasowej!"
+                return 1
+            fi
+            ;;
+        "Reset efektów negatywnych"|"Oczyszczenie")
+            local cleanse_item="$item"
+            if player_has_item "$cleanse_item"; then
+                player_remove_item "$cleanse_item"
+                # Czyścimy negatywne efekty gracza bez naruszania pozytywnych buffów.
+                PLAYER_STATUS_STUN_TURNS=0
+                PLAYER_STATUS_BLEED_TURNS=0
+                PLAYER_STATUS_BLEED_DAMAGE=0
+                printf "  %b✨ Oczyszczenie usuwa negatywne efekty statusu.%b\n" \
+                    "${COLOR_SUCCESS}" "${RESET}"
+                return 0
+            else
+                ui_error "Nie masz przedmiotu: ${cleanse_item}!"
                 return 1
             fi
             ;;
