@@ -64,6 +64,22 @@ combat_enemy_attack > /dev/null
 assert_true "HP reduced after enemy attack" '[[ $PLAYER_HP -lt 100 ]]'
 assert_true "HP still positive after one hit" '[[ $PLAYER_HP -gt 0 ]]'
 
+# ── shield absorbs enemy damage in combat ───────────────────────────
+player_create "ShieldHero"
+PLAYER_SHIELD_VALUE=100
+ENEMY_ATTACK=4
+combat_enemy_attack > /dev/null
+assert_eq "tarcza blokuje cały cios" "100" "$PLAYER_HP"
+assert_true "wartość tarczy spada po absorpcji" '[[ $PLAYER_SHIELD_VALUE -lt 100 ]]'
+
+# ── start-turn bleed tick on enemy ──────────────────────────────────
+enemy_set "Bleeding Dummy" 40 0 "navigation" "dummy" "ok" 0 0
+ENEMY_STATUS_BLEED_TURNS=2
+ENEMY_STATUS_BLEED_DAMAGE=7
+combat_start_turn_phase "enemy" > /dev/null
+assert_eq "bleed odejmuje HP wroga" "33" "$ENEMY_HP"
+assert_eq "bleed redukuje licznik tur" "1" "$ENEMY_STATUS_BLEED_TURNS"
+
 # ── combat_victory awards XP and Gold ─────────────────────────────
 player_create "RewardHero"
 enemy_set "Reward Dummy" 0 0 "navigation" "" "You win!" 50 25 "Mikstura zdrowia"

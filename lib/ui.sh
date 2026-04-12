@@ -194,6 +194,30 @@ ui_enemy_status() {
         "$name" "$hp" "$max_hp" "$(ui_bar "$hp" "$max_hp" 15)"
 }
 
+# Wyświetla aktywne efekty statusu i ich czas trwania dla wybranego celu.
+ui_combat_effects() {
+    local target_name="$1"
+    local stun_turns="$2"
+    local bleed_turns="$3"
+    local bleed_damage="$4"
+    local shield_value="$5"
+
+    local line=""
+    if [[ $stun_turns -gt 0 ]]; then
+        line+=" ${COLOR_WARNING}stun:${stun_turns}t${RESET}"
+    fi
+    if [[ $bleed_turns -gt 0 ]]; then
+        line+=" ${COLOR_ERROR}bleed:${bleed_turns}t(${bleed_damage})${RESET}"
+    fi
+    if [[ $shield_value -gt 0 ]]; then
+        line+=" ${BOLD_CYAN}shield:${shield_value}${RESET}"
+    fi
+
+    if [[ -n "$line" ]]; then
+        printf "  %bEfekty (%s):%b%s\n" "${DIM}" "$target_name" "${RESET}" "$line"
+    fi
+}
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Messages
 # ──────────────────────────────────────────────────────────────────────────────
