@@ -342,19 +342,17 @@ combat_player_attack() {
 # ──────────────────────────────────────────────────────────────────────────────
 
 combat_enemy_attack() {
-    local dmg=$(( ENEMY_ATTACK + RANDOM % 5 ))
+    local base_dmg=$(( ENEMY_ATTACK + RANDOM % 5 ))
     local mitigation
     mitigation="$(talent_defense_reduction)"
-    local final_dmg=$(( dmg - mitigation ))
-    [[ $final_dmg -lt 1 ]] && final_dmg=1
+    local dmg=$(( base_dmg - mitigation ))
+    [[ $dmg -lt 1 ]] && dmg=1
+    local absorbed=0
     printf "\n  %b%s atakuje cię!%b\n" "${COLOR_ENEMY}" "$ENEMY_NAME" "${RESET}"
     if [[ "$mitigation" -gt 0 ]]; then
         printf "  %b🛡 Talent obrony redukuje obrażenia o %d.%b\n" \
             "${BOLD_CYAN}" "$mitigation" "${RESET}"
     fi
-    player_damage "$final_dmg"
-    local absorbed=0
-    printf "\n  %b%s atakuje cię!%b\n" "${COLOR_ENEMY}" "$ENEMY_NAME" "${RESET}"
 
     if [[ $PLAYER_SHIELD_VALUE -gt 0 ]]; then
         absorbed=$(( dmg < PLAYER_SHIELD_VALUE ? dmg : PLAYER_SHIELD_VALUE ))
@@ -381,10 +379,47 @@ combat_use_item() {
         ui_warning "Twój ekwipunek jest pusty!"
         return
     fi
-    player_show_inventory
-    ui_prompt "Którego przedmiotu użyć? "
-    local item_name
-    read -r item_name
+
+    # Pokazujemy listę unikalnych nazw z numeracją,
+    # aby bezpiecznie obsłużyć przedmioty o nazwach wielowyrazowych.
+    local unique_items=()
+    local item
+    for item in "${PLAYER_INVENTORY[@]}"; do
+        local exists=false
+        local listed
+        for listed in "${unique_items[@]}"; do
+            if [[ "$listed" == "$item" ]]; then
+                exists=true
+                break
+            fi
+        done
+        [[ "$exists" == "false" ]] && unique_items+=("$item")
+    done
+
+    echo
+    printf "  %bUżyj przedmiotu:%b\n\n" "${BOLD_WHITE}" "${RESET}"
+    local i
+    for i in "${!unique_items[@]}"; do
+        printf "  %b[%d]%b %s\n" "${BOLD_CYAN}" "$(( i + 1 ))" "${RESET}" "${unique_items[$i]}"
+    done
+    printf "  %b[Q]%b Powrót\n\n" "${BOLD_CYAN}" "${RESET}"
+
+    ui_prompt "Wybierz numer przedmiotu: "
+    local choice
+    read -r choice
+
+    case "${choice,,}" in
+        q|powrot|powrót|exit)
+            return
+            ;;
+    esac
+
+    if [[ ! "$choice" =~ ^[0-9]+$ ]] || [[ "$choice" -lt 1 ]] || [[ "$choice" -gt "${#unique_items[@]}" ]]; then
+        ui_error "Nieprawidłowy numer przedmiotu."
+        return
+    fi
+
+    local item_name="${unique_items[$(( choice - 1 ))]}"
     player_use_item "$item_name"
 }
 

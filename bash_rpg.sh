@@ -13,6 +13,7 @@ source "${GAME_DIR}/lib/player.sh"
 source "${GAME_DIR}/lib/challenges.sh"
 source "${GAME_DIR}/lib/combat.sh"
 source "${GAME_DIR}/lib/save_load.sh"
+source "${GAME_DIR}/lib/shop.sh"
 
 # Source all levels
 source "${GAME_DIR}/levels/level_01.sh"
@@ -110,6 +111,7 @@ start_adventure() {
         fi
 
         ui_player_status
+        shop_level_checkpoint
         press_enter
     done
 }
@@ -211,7 +213,14 @@ show_help() {
     echo
     printf "  %bPrzedmioty%b\n" "${BOLD_WHITE}" "${RESET}"
     printf "  Mikstura zdrowia    – przywraca 50 PŻ\n"
-    printf "  Eliksir wiedzy      – wzmacnia klimat nauki i eksploracji wiedzy Bash\n"
+    printf "  Mikstura many       – odnawia 1 ładunek podpowiedzi (talent Wiedza)\n"
+    printf "  Mikstura wiedzy     – odnawia 2 ładunki podpowiedzi\n"
+    printf "  Tarcza tymczasowa   – dodaje 40 pkt. tarczy pochłaniającej obrażenia\n"
+    printf "  Oczyszczenie        – usuwa negatywne efekty (ogłuszenie/krwawienie)\n"
+    echo
+    printf "  %bSklep po rozdziale%b\n" "${BOLD_WHITE}" "${RESET}"
+    printf "  Po ukończeniu poziomu możesz wejść do sklepu i kupić przedmioty za złoto.\n"
+    printf "  Ceny rosną wraz z poziomem obszaru, aby utrzymać balans rozgrywki.\n"
     echo
     printf "  %bTalenty (od poziomu 2)%b\n" "${BOLD_WHITE}" "${RESET}"
     printf "  Za każdy awans dostajesz 1 punkt talentu do rozdania.\n"
