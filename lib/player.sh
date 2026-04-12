@@ -5,6 +5,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/colors.sh"
 source "${SCRIPT_DIR}/ui.sh"
+source "${SCRIPT_DIR}/talents.sh"
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Player state (global variables)
@@ -18,6 +19,11 @@ PLAYER_MAX_HP=100
 PLAYER_GOLD=0
 PLAYER_ATTACK=10
 PLAYER_DEFENSE=5
+PLAYER_TALENT_POINTS=0
+TALENT_OFFENSE_LEVEL=0
+TALENT_DEFENSE_LEVEL=0
+TALENT_KNOWLEDGE_LEVEL=0
+TALENT_KNOWLEDGE_HINTS=0
 declare -a PLAYER_INVENTORY=()
 CURRENT_LEVEL=1
 
@@ -42,6 +48,7 @@ player_create() {
     PLAYER_DEFENSE=5
     PLAYER_INVENTORY=()
     CURRENT_LEVEL=1
+    talents_reset
 }
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -67,10 +74,13 @@ player_level_up() {
     PLAYER_XP_NEXT=${XP_TABLE[$(( PLAYER_LEVEL + 1 ))]}
     (( PLAYER_ATTACK += 3 ))
     (( PLAYER_DEFENSE += 2 ))
+    talent_grant_level_point
 
     ui_level_up "$PLAYER_LEVEL"
     printf "  %b Maks. PŻ: %d   Atak: %d   Obrona: %d%b\n" \
         "${BOLD_WHITE}" "$PLAYER_MAX_HP" "$PLAYER_ATTACK" "$PLAYER_DEFENSE" "${RESET}"
+    printf "  %b Talenty -> %s%b\n" "${BOLD_WHITE}" "$(talent_summary_line)" "${RESET}"
+    talent_choose_on_level_up
     press_enter
 }
 
@@ -212,6 +222,10 @@ player_show_stats() {
     printf "  %b%-12s%b %d\n" "${BOLD_WHITE}" "Obrona:"  "${RESET}" "$PLAYER_DEFENSE"
     printf "  %b%-12s%b %d\n" "${BOLD_WHITE}" "Złoto:"   "${RESET}" "$PLAYER_GOLD"
     printf "  %b%-12s%b %d\n" "${BOLD_WHITE}" "Obszar:"  "${RESET}" "$CURRENT_LEVEL"
+    printf "  %b%-12s%b %d\n" "${BOLD_WHITE}" "Pkt. talent:" "${RESET}" "$PLAYER_TALENT_POINTS"
+    printf "  %b%-12s%b O:%d D:%d W:%d\n" "${BOLD_WHITE}" "Talenty:" "${RESET}" \
+        "$TALENT_OFFENSE_LEVEL" "$TALENT_DEFENSE_LEVEL" "$TALENT_KNOWLEDGE_LEVEL"
+    printf "  %b%-12s%b %d\n" "${BOLD_WHITE}" "Podpowiedzi:" "${RESET}" "$TALENT_KNOWLEDGE_HINTS"
     ui_hr "─"
     player_show_inventory
 }

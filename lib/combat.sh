@@ -141,28 +141,60 @@ combat_start() {
 combat_player_attack() {
     local used="$1"
     challenges_get_random "$ENEMY_CATEGORY" "$used"
+    local primary_answer
+    primary_answer="$(echo "$CHALLENGE_ANSWERS" | cut -d"${SEP}" -f1)"
 
     echo
     ui_hr "─"
     printf "  %b⚔  Wyzwanie:%b\n" "${BOLD_YELLOW}" "${RESET}"
     printf "  %b%s%b\n\n" "${BOLD_WHITE}" "$CHALLENGE_QUESTION" "${RESET}"
+    talent_knowledge_try_hint "$primary_answer" >/dev/null
     ui_prompt "Twoja odpowiedź: "
     local answer
     read -r answer
 
     if challenges_check_answer "$answer" "$CHALLENGE_ANSWERS"; then
         local dmg=$(( PLAYER_ATTACK + RANDOM % 5 ))
+        local offense_result
+        offense_result="$(talent_apply_offense_bonus "$dmg")"
+        local final_dmg="${offense_result%%|*}"
+        local was_crit="${offense_result##*|}"
+        dmg="$final_dmg"
         ENEMY_HP=$(( ENEMY_HP - dmg ))
         [[ $ENEMY_HP -lt 0 ]] && ENEMY_HP=0
         printf "\n  %b✔ Poprawnie!%b  Zadajesz %b%d obrażeń%b!\n" \
             "${COLOR_SUCCESS}" "${RESET}" "${BOLD_RED}" "$dmg" "${RESET}"
+        if [[ "$was_crit" == "true" ]]; then
+            printf "  %b✦ Trafienie krytyczne dzięki talentowi ofensywy!%b\n" \
+                "${BOLD_RED}" "${RESET}"
+        fi
+        printf "  %b%s%b\n" "${DIM}" "$CHALLENGE_EXPLAIN" "${RESET}"
+        sleep 1
+        return 0
+    elif talent_knowledge_salvage; then
+        local dmg=$(( PLAYER_ATTACK / 2 + RANDOM % 3 ))
+        local offense_result
+        offense_result="$(talent_apply_offense_bonus "$dmg")"
+        local final_dmg="${offense_result%%|*}"
+        local was_crit="${offense_result##*|}"
+        dmg="$final_dmg"
+        ENEMY_HP=$(( ENEMY_HP - dmg ))
+        [[ $ENEMY_HP -lt 0 ]] && ENEMY_HP=0
+        printf "\n  %b🧠 Talent wiedzy uratował odpowiedź!%b Zadajesz %b%d obrażeń%b.\n" \
+            "${COLOR_HINT}" "${RESET}" "${BOLD_RED}" "$dmg" "${RESET}"
+        if [[ "$was_crit" == "true" ]]; then
+            printf "  %b✦ Dodatkowo aktywował się krytyk ofensywy!%b\n" \
+                "${BOLD_RED}" "${RESET}"
+        fi
+        printf "  %bPoprawna odpowiedź to:%b %b%s%b\n" \
+            "${DIM}" "${RESET}" "${COLOR_COMMAND}" "$primary_answer" "${RESET}"
         printf "  %b%s%b\n" "${DIM}" "$CHALLENGE_EXPLAIN" "${RESET}"
         sleep 1
         return 0
     else
         printf "\n  %b✘ Błąd!%b  Poprawna odpowiedź to: %b%s%b\n" \
             "${COLOR_ERROR}" "${RESET}" "${COLOR_COMMAND}" \
-            "$(echo "$CHALLENGE_ANSWERS" | cut -d"${SEP}" -f1)" "${RESET}"
+            "$primary_answer" "${RESET}"
         printf "  %b%s%b\n" "${DIM}" "$CHALLENGE_EXPLAIN" "${RESET}"
         printf "  %bTracisz kolejkę!%b\n" "${COLOR_WARNING}" "${RESET}"
         press_enter
@@ -176,8 +208,16 @@ combat_player_attack() {
 
 combat_enemy_attack() {
     local dmg=$(( ENEMY_ATTACK + RANDOM % 5 ))
+    local mitigation
+    mitigation="$(talent_defense_reduction)"
+    local final_dmg=$(( dmg - mitigation ))
+    [[ $final_dmg -lt 1 ]] && final_dmg=1
     printf "\n  %b%s atakuje cię!%b\n" "${COLOR_ENEMY}" "$ENEMY_NAME" "${RESET}"
-    player_damage "$dmg"
+    if [[ "$mitigation" -gt 0 ]]; then
+        printf "  %b🛡 Talent obrony redukuje obrażenia o %d.%b\n" \
+            "${BOLD_CYAN}" "$mitigation" "${RESET}"
+    fi
+    player_damage "$final_dmg"
     [[ "${BASH_RPG_TESTING:-}" == "1" ]] || sleep 0.5
 }
 

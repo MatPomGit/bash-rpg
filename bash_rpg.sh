@@ -211,7 +211,13 @@ show_help() {
     echo
     printf "  %bPrzedmioty%b\n" "${BOLD_WHITE}" "${RESET}"
     printf "  Mikstura zdrowia    – przywraca 50 PŻ\n"
-    printf "  Eliksir wiedzy      – pomija wyzwanie (ujawnia odpowiedź)\n"
+    printf "  Eliksir wiedzy      – wzmacnia klimat nauki i eksploracji wiedzy Bash\n"
+    echo
+    printf "  %bTalenty (od poziomu 2)%b\n" "${BOLD_WHITE}" "${RESET}"
+    printf "  Za każdy awans dostajesz 1 punkt talentu do rozdania.\n"
+    printf "  Ofensywa            – +5%% szansy na trafienie krytyczne za poziom talentu.\n"
+    printf "  Obrona              – stała redukcja obrażeń od wroga o 1 za poziom talentu.\n"
+    printf "  Wiedza              – szansa uratowania błędnej odpowiedzi i ładunki podpowiedzi.\n"
     echo
     printf "  %bWskazówki%b\n" "${BOLD_WHITE}" "${RESET}"
     printf "  • Wpisz tylko nazwę polecenia (np. 'ls') lub pełną odpowiedź.\n"
