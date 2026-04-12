@@ -21,6 +21,12 @@ PLAYER_DEFENSE=5
 declare -a PLAYER_INVENTORY=()
 CURRENT_LEVEL=1
 
+# Domyślne wartości efektów bojowych (faktycznie wykorzystywane przez lib/combat.sh).
+# Utrzymujemy je także tutaj, aby użycie przedmiotów poza walką nie powodowało błędów.
+PLAYER_SHIELD_VALUE=${PLAYER_SHIELD_VALUE:-0}
+ENEMY_STATUS_BLEED_TURNS=${ENEMY_STATUS_BLEED_TURNS:-0}
+ENEMY_STATUS_BLEED_DAMAGE=${ENEMY_STATUS_BLEED_DAMAGE:-0}
+
 # XP thresholds per level (index = level)
 XP_TABLE=(0 100 250 450 700 1000 1400 1900 2500 3200 4000)
 MAX_HP_TABLE=(0 100 120 145 175 210 250 300 360 430 500)
@@ -155,6 +161,33 @@ player_use_item() {
                 return 0
             else
                 ui_error "Nie masz Eliksiru wiedzy!"
+                return 1
+            fi
+            ;;
+        "Runa tarczy")
+            if player_has_item "Runa tarczy"; then
+                player_remove_item "Runa tarczy"
+                # Dodajemy warstwę tarczy, która pochłania obrażenia przed pancerzem.
+                PLAYER_SHIELD_VALUE=$(( PLAYER_SHIELD_VALUE + 25 ))
+                printf "  %b🛡 Aktywujesz Runę tarczy (+25 tarczy, łącznie: %d).%b\n" \
+                    "${BOLD_CYAN}" "$PLAYER_SHIELD_VALUE" "${RESET}"
+                return 0
+            else
+                ui_error "Nie masz Runy tarczy!"
+                return 1
+            fi
+            ;;
+        "Bombka krwawienia")
+            if player_has_item "Bombka krwawienia"; then
+                player_remove_item "Bombka krwawienia"
+                # Nakładamy efekt krwawienia na przeciwnika na kolejne tury.
+                ENEMY_STATUS_BLEED_TURNS=3
+                ENEMY_STATUS_BLEED_DAMAGE=8
+                printf "  %b☠ Rzucasz Bombkę krwawienia! Wróg krwawi przez 3 tury.%b\n" \
+                    "${COLOR_WARNING}" "${RESET}"
+                return 0
+            else
+                ui_error "Nie masz Bombki krwawienia!"
                 return 1
             fi
             ;;

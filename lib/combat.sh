@@ -24,6 +24,16 @@ ENEMY_XP_REWARD=0
 ENEMY_GOLD_REWARD=0
 ENEMY_ITEM_REWARD=""   # empty = no item
 
+# Stan efektów walki (resetowany na początku każdej walki)
+PLAYER_STATUS_STUN_TURNS=0
+PLAYER_STATUS_BLEED_TURNS=0
+PLAYER_STATUS_BLEED_DAMAGE=0
+PLAYER_SHIELD_VALUE=0
+ENEMY_STATUS_STUN_TURNS=0
+ENEMY_STATUS_BLEED_TURNS=0
+ENEMY_STATUS_BLEED_DAMAGE=0
+ENEMY_SHIELD_VALUE=0
+
 # Define an enemy (call before combat_start)
 enemy_set() {
     ENEMY_NAME="$1"
@@ -38,6 +48,79 @@ enemy_set() {
     ENEMY_ITEM_REWARD="${9:-}"
 }
 
+# Resetuje wszystkie statusy i tarcze przed nową walką.
+combat_reset_status_effects() {
+    PLAYER_STATUS_STUN_TURNS=0
+    PLAYER_STATUS_BLEED_TURNS=0
+    PLAYER_STATUS_BLEED_DAMAGE=0
+    PLAYER_SHIELD_VALUE=0
+    ENEMY_STATUS_STUN_TURNS=0
+    ENEMY_STATUS_BLEED_TURNS=0
+    ENEMY_STATUS_BLEED_DAMAGE=0
+    ENEMY_SHIELD_VALUE=0
+}
+
+# Faza startu tury dla celu: redukcja liczników, tick bleed i sprawdzenie ogłuszenia.
+# Argumenty:
+#   1) "player" lub "enemy"
+# Zwraca:
+#   0 -> może wykonać akcję, 1 -> pomija akcję (stun)
+combat_start_turn_phase() {
+    local target="$1"
+
+    if [[ "$target" == "player" ]]; then
+        # Redukujemy licznik i nakładamy obrażenia okresowe krwawienia.
+        if [[ $PLAYER_STATUS_BLEED_TURNS -gt 0 ]]; then
+            (( PLAYER_STATUS_BLEED_TURNS-- ))
+            local bleed_dmg="$PLAYER_STATUS_BLEED_DAMAGE"
+            printf "  %b☠ Krwawienie zadaje ci %d obrażeń (pozostało tur: %d).%b\n" \
+                "${COLOR_WARNING}" "$bleed_dmg" "$PLAYER_STATUS_BLEED_TURNS" "${RESET}"
+            player_damage "$bleed_dmg"
+        fi
+
+        # Redukujemy licznik i oznaczamy pominięcie akcji przy ogłuszeniu.
+        if [[ $PLAYER_STATUS_STUN_TURNS -gt 0 ]]; then
+            (( PLAYER_STATUS_STUN_TURNS-- ))
+            ui_warning "Jesteś ogłuszony! Pomijasz akcję (pozostało tur: ${PLAYER_STATUS_STUN_TURNS})."
+            return 1
+        fi
+    else
+        # Redukujemy licznik i nakładamy obrażenia okresowe krwawienia.
+        if [[ $ENEMY_STATUS_BLEED_TURNS -gt 0 ]]; then
+            (( ENEMY_STATUS_BLEED_TURNS-- ))
+            local bleed_dmg="$ENEMY_STATUS_BLEED_DAMAGE"
+            ENEMY_HP=$(( ENEMY_HP - bleed_dmg ))
+            [[ $ENEMY_HP -lt 0 ]] && ENEMY_HP=0
+            printf "  %b☠ %s krwawi i otrzymuje %d obrażeń (pozostało tur: %d).%b\n" \
+                "${COLOR_WARNING}" "$ENEMY_NAME" "$bleed_dmg" "$ENEMY_STATUS_BLEED_TURNS" "${RESET}"
+        fi
+
+        # Redukujemy licznik i oznaczamy pominięcie akcji przy ogłuszeniu.
+        if [[ $ENEMY_STATUS_STUN_TURNS -gt 0 ]]; then
+            (( ENEMY_STATUS_STUN_TURNS-- ))
+            ui_warning "${ENEMY_NAME} jest ogłuszony i pomija akcję (pozostało tur: ${ENEMY_STATUS_STUN_TURNS})."
+            return 1
+        fi
+    fi
+
+    return 0
+}
+
+# Wykonuje pełną turę przeciwnika: faza startu tury + atak (jeśli nie jest ogłuszony).
+combat_enemy_turn() {
+    combat_start_turn_phase "enemy"
+    local can_act=$?
+    if [[ $ENEMY_HP -le 0 ]]; then
+        return 2
+    fi
+    if [[ $can_act -ne 0 ]]; then
+        return 1
+    fi
+
+    combat_enemy_attack
+    return 0
+}
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Combat loop
 # ──────────────────────────────────────────────────────────────────────────────
@@ -47,6 +130,8 @@ combat_start() {
     local used_challenges=""
     local turn=1
     local fled=false
+
+    combat_reset_status_effects
 
     ui_clear
     ui_combat_banner "$ENEMY_NAME"
@@ -64,10 +149,41 @@ combat_start() {
         ui_player_status
         echo
         ui_enemy_status "$ENEMY_NAME" "$ENEMY_HP" "$ENEMY_MAX_HP"
+        ui_combat_effects "Gracz" "$PLAYER_STATUS_STUN_TURNS" "$PLAYER_STATUS_BLEED_TURNS" \
+            "$PLAYER_STATUS_BLEED_DAMAGE" "$PLAYER_SHIELD_VALUE"
+        ui_combat_effects "$ENEMY_NAME" "$ENEMY_STATUS_STUN_TURNS" "$ENEMY_STATUS_BLEED_TURNS" \
+            "$ENEMY_STATUS_BLEED_DAMAGE" "$ENEMY_SHIELD_VALUE"
         echo
         ui_hr "─"
         printf "  %bKolejka %d%b\n" "${DIM}" "$turn" "${RESET}"
         ui_hr "─"
+
+        # Faza startu tury gracza: liczniki, tick bleed i ewentualne ogłuszenie.
+        if ! combat_start_turn_phase "player"; then
+            if player_is_dead; then
+                combat_defeat
+                return 1
+            fi
+
+            # Gdy gracz jest ogłuszony, przechodzi od razu tura przeciwnika.
+            combat_enemy_turn
+            local enemy_turn_result=$?
+            if [[ $enemy_turn_result -eq 2 ]]; then
+                combat_victory
+                return 0
+            fi
+            if player_is_dead; then
+                combat_defeat
+                return 1
+            fi
+            (( turn++ ))
+            continue
+        fi
+
+        if player_is_dead; then
+            combat_defeat
+            return 1
+        fi
 
         # Combat menu
         echo
@@ -96,12 +212,22 @@ combat_start() {
                 fi
 
                 # Enemy counter-attacks
-                combat_enemy_attack
+                combat_enemy_turn
+                local enemy_turn_result=$?
+                if [[ $enemy_turn_result -eq 2 ]]; then
+                    combat_victory
+                    return 0
+                fi
                 ;;
             2)
                 combat_use_item
                 # Enemy still attacks after item use
-                combat_enemy_attack
+                combat_enemy_turn
+                local enemy_turn_result=$?
+                if [[ $enemy_turn_result -eq 2 ]]; then
+                    combat_victory
+                    return 0
+                fi
                 ;;
             3)
                 player_show_inventory
@@ -152,6 +278,15 @@ combat_player_attack() {
 
     if challenges_check_answer "$answer" "$CHALLENGE_ANSWERS"; then
         local dmg=$(( PLAYER_ATTACK + RANDOM % 5 ))
+        local absorbed=0
+        if [[ $ENEMY_SHIELD_VALUE -gt 0 ]]; then
+            absorbed=$(( dmg < ENEMY_SHIELD_VALUE ? dmg : ENEMY_SHIELD_VALUE ))
+            ENEMY_SHIELD_VALUE=$(( ENEMY_SHIELD_VALUE - absorbed ))
+            dmg=$(( dmg - absorbed ))
+            printf "  %b🛡 Tarcza wroga pochłania %d obrażeń (pozostało: %d).%b\n" \
+                "${BOLD_CYAN}" "$absorbed" "$ENEMY_SHIELD_VALUE" "${RESET}"
+        fi
+
         ENEMY_HP=$(( ENEMY_HP - dmg ))
         [[ $ENEMY_HP -lt 0 ]] && ENEMY_HP=0
         printf "\n  %b✔ Poprawnie!%b  Zadajesz %b%d obrażeń%b!\n" \
@@ -176,8 +311,22 @@ combat_player_attack() {
 
 combat_enemy_attack() {
     local dmg=$(( ENEMY_ATTACK + RANDOM % 5 ))
+    local absorbed=0
     printf "\n  %b%s atakuje cię!%b\n" "${COLOR_ENEMY}" "$ENEMY_NAME" "${RESET}"
-    player_damage "$dmg"
+
+    if [[ $PLAYER_SHIELD_VALUE -gt 0 ]]; then
+        absorbed=$(( dmg < PLAYER_SHIELD_VALUE ? dmg : PLAYER_SHIELD_VALUE ))
+        PLAYER_SHIELD_VALUE=$(( PLAYER_SHIELD_VALUE - absorbed ))
+        dmg=$(( dmg - absorbed ))
+        printf "  %b🛡 Twoja tarcza pochłania %d obrażeń (pozostało: %d).%b\n" \
+            "${BOLD_CYAN}" "$absorbed" "$PLAYER_SHIELD_VALUE" "${RESET}"
+    fi
+
+    if [[ $dmg -gt 0 ]]; then
+        player_damage "$dmg"
+    else
+        printf "  %bAtak nie przebił się przez tarczę!%b\n" "${COLOR_SUCCESS}" "${RESET}"
+    fi
     [[ "${BASH_RPG_TESTING:-}" == "1" ]] || sleep 0.5
 }
 

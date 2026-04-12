@@ -108,6 +108,24 @@ player_use_item "Mikstura zdrowia" > /dev/null
 assert_eq "mikstura leczy 50 PŻ" "100" "$PLAYER_HP"
 assert_true "mikstura zużyta z ekwipunku" '! player_has_item "Mikstura zdrowia"'
 
+# ── player_use_item (Runa tarczy) ───────────────────────────────────
+player_create "TestHero"
+PLAYER_SHIELD_VALUE=0
+player_add_item "Runa tarczy" > /dev/null
+player_use_item "Runa tarczy" > /dev/null
+assert_eq "runa dodaje tarczę" "25" "$PLAYER_SHIELD_VALUE"
+assert_true "runa zużyta z ekwipunku" '! player_has_item "Runa tarczy"'
+
+# ── player_use_item (Bombka krwawienia) ─────────────────────────────
+player_create "TestHero"
+ENEMY_STATUS_BLEED_TURNS=0
+ENEMY_STATUS_BLEED_DAMAGE=0
+player_add_item "Bombka krwawienia" > /dev/null
+player_use_item "Bombka krwawienia" > /dev/null
+assert_eq "bombka ustawia czas bleed" "3" "$ENEMY_STATUS_BLEED_TURNS"
+assert_eq "bombka ustawia obrażenia bleed" "8" "$ENEMY_STATUS_BLEED_DAMAGE"
+assert_true "bombka zużyta z ekwipunku" '! player_has_item "Bombka krwawienia"'
+
 echo
 echo "  Player Tests: ${PASS} passed, ${FAIL} failed"
 [[ $FAIL -eq 0 ]]
