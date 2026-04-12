@@ -5,6 +5,7 @@ GAME_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "${GAME_DIR}/lib/colors.sh"
 source "${GAME_DIR}/lib/ui.sh"
 source "${GAME_DIR}/lib/player.sh"
+source "${GAME_DIR}/lib/save_load.sh"
 
 PASS=0
 FAIL=0
@@ -28,6 +29,18 @@ assert_true() {
         (( PASS++ ))
     else
         printf "    %b✘%b %s\n" "${RED:-}" "${RESET:-}" "$desc"
+        (( FAIL++ ))
+    fi
+}
+
+assert_file_contains() {
+    local desc="$1" file="$2" pattern="$3"
+    if rg -q "$pattern" "$file"; then
+        printf "    %b✔%b %s\n" "${GREEN:-}" "${RESET:-}" "$desc"
+        (( PASS++ ))
+    else
+        printf "    %b✘%b %s  (pattern '%s' not found in '%s')\n" \
+            "${RED:-}" "${RESET:-}" "$desc" "$pattern" "$file"
         (( FAIL++ ))
     fi
 }
@@ -125,6 +138,79 @@ player_use_item "Bombka krwawienia" > /dev/null
 assert_eq "bombka ustawia czas bleed" "3" "$ENEMY_STATUS_BLEED_TURNS"
 assert_eq "bombka ustawia obrażenia bleed" "8" "$ENEMY_STATUS_BLEED_DAMAGE"
 assert_true "bombka zużyta z ekwipunku" '! player_has_item "Bombka krwawienia"'
+
+# ── save/load inventory format + migration + integrity ───────────────
+TEST_SAVE_DIR="$(mktemp -d)"
+SAVE_DIR="$TEST_SAVE_DIR"
+SAVE_FILE="${SAVE_DIR}/save.dat"
+
+player_create "SaverHero"
+PLAYER_INVENTORY=(
+    "Mikstura zdrowia"
+    "Zwój teleportacji"
+    "Klucz=Sekretny #1"
+)
+save_game > /dev/null
+
+PLAYER_INVENTORY=()
+load_game > /dev/null
+assert_eq "save/load zachowuje liczbę przedmiotów" "3" "${#PLAYER_INVENTORY[@]}"
+assert_eq "save/load zachowuje item ze spacją (1)" "Mikstura zdrowia" "${PLAYER_INVENTORY[0]}"
+assert_eq "save/load zachowuje item ze spacją (2)" "Zwój teleportacji" "${PLAYER_INVENTORY[1]}"
+assert_eq "save/load zachowuje znaki specjalne" "Klucz=Sekretny #1" "${PLAYER_INVENTORY[2]}"
+assert_file_contains "nowy format zapisuje elementy jako Base64" "$SAVE_FILE" '^PLAYER_INVENTORY_ITEM_0_B64='
+
+# Test migracji starego formatu: jedna linia PLAYER_INVENTORY=...
+cat > "$SAVE_FILE" <<'EOF'
+PLAYER_NAME=LegacyHero
+PLAYER_LEVEL=1
+PLAYER_XP=0
+PLAYER_XP_NEXT=250
+PLAYER_HP=100
+PLAYER_MAX_HP=100
+PLAYER_GOLD=0
+PLAYER_ATTACK=10
+PLAYER_DEFENSE=5
+PLAYER_TALENT_POINTS=0
+TALENT_OFFENSE_LEVEL=0
+TALENT_DEFENSE_LEVEL=0
+TALENT_KNOWLEDGE_LEVEL=0
+TALENT_KNOWLEDGE_HINTS=0
+CURRENT_LEVEL=1
+PLAYER_INVENTORY=Potion Sword
+EOF
+
+load_game > /dev/null
+assert_eq "legacy: odczyt itemu 1 po migracji" "Potion" "${PLAYER_INVENTORY[0]}"
+assert_eq "legacy: odczyt itemu 2 po migracji" "Sword" "${PLAYER_INVENTORY[1]}"
+assert_file_contains "legacy: plik migrowany do nowego formatu" "$SAVE_FILE" '^PLAYER_INVENTORY_ITEM_1_B64='
+
+# Test integralności: brak wymaganego klucza powinien zablokować odczyt.
+cat > "$SAVE_FILE" <<'EOF'
+PLAYER_NAME=BrokenHero
+PLAYER_LEVEL=1
+PLAYER_XP=0
+PLAYER_XP_NEXT=250
+PLAYER_MAX_HP=100
+PLAYER_GOLD=0
+PLAYER_ATTACK=10
+PLAYER_DEFENSE=5
+PLAYER_TALENT_POINTS=0
+TALENT_OFFENSE_LEVEL=0
+TALENT_DEFENSE_LEVEL=0
+TALENT_KNOWLEDGE_LEVEL=0
+TALENT_KNOWLEDGE_HINTS=0
+CURRENT_LEVEL=1
+PLAYER_INVENTORY_COUNT=0
+EOF
+
+if load_game > /dev/null 2>&1; then
+    assert_true "integralność: uszkodzony plik powinien nie przejść" "false"
+else
+    assert_true "integralność: uszkodzony plik odrzucony" "true"
+fi
+
+rm -rf "$TEST_SAVE_DIR"
 
 echo
 echo "  Player Tests: ${PASS} passed, ${FAIL} failed"

@@ -3,6 +3,48 @@
 
 SAVE_DIR="${HOME}/.bash_rpg"
 SAVE_FILE="${SAVE_DIR}/save.dat"
+SAVE_FORMAT_VERSION="2"
+
+# Minimalny zestaw kluczy wymaganych do uznania pliku zapisu za poprawny.
+# Dzięki temu nie ładujemy uszkodzonego lub niekompletnego stanu gry.
+SAVE_REQUIRED_KEYS=(
+    PLAYER_NAME
+    PLAYER_LEVEL
+    PLAYER_XP
+    PLAYER_XP_NEXT
+    PLAYER_HP
+    PLAYER_MAX_HP
+    PLAYER_GOLD
+    PLAYER_ATTACK
+    PLAYER_DEFENSE
+    PLAYER_TALENT_POINTS
+    TALENT_OFFENSE_LEVEL
+    TALENT_DEFENSE_LEVEL
+    TALENT_KNOWLEDGE_LEVEL
+    TALENT_KNOWLEDGE_HINTS
+    CURRENT_LEVEL
+)
+
+# Koduje pojedynczy wpis ekwipunku do Base64.
+# Powód: nazwy przedmiotów mogą zawierać spacje i znaki specjalne,
+# więc format "jedna wartość po spacji" jest niejednoznaczny.
+_save_encode_item() {
+    printf '%s' "$1" | base64 | tr -d '\n='
+}
+
+# Dekoduje wpis ekwipunku zapisany w Base64.
+_save_decode_item() {
+    local payload="$1"
+    local mod=$(( ${#payload} % 4 ))
+    if [[ "$mod" -eq 2 ]]; then
+        payload+="=="
+    elif [[ "$mod" -eq 3 ]]; then
+        payload+="="
+    elif [[ "$mod" -eq 1 ]]; then
+        return 1
+    fi
+    printf '%s' "$payload" | base64 --decode
+}
 
 save_game() {
     mkdir -p "$SAVE_DIR"
@@ -23,16 +65,18 @@ save_game() {
         printf 'TALENT_KNOWLEDGE_LEVEL=%s\n' "${TALENT_KNOWLEDGE_LEVEL}"
         printf 'TALENT_KNOWLEDGE_HINTS=%s\n' "${TALENT_KNOWLEDGE_HINTS}"
         printf 'CURRENT_LEVEL=%s\n' "${CURRENT_LEVEL}"
+        printf 'SAVE_FORMAT_VERSION=%s\n' "${SAVE_FORMAT_VERSION}"
 
-        # Nowy, bezpieczny format ekwipunku (wspiera nazwy wielowyrazowe).
+        # Nowy, jednoznaczny format ekwipunku:
+        # - liczba elementów w PLAYER_INVENTORY_COUNT
+        # - każdy element jako osobny wpis Base64 PLAYER_INVENTORY_ITEM_<idx>_B64
+        # Dzięki temu odczyt nie dzieli elementów po spacjach.
         printf 'PLAYER_INVENTORY_COUNT=%d\n' "${#PLAYER_INVENTORY[@]}"
         local idx
         for idx in "${!PLAYER_INVENTORY[@]}"; do
-            printf 'PLAYER_INVENTORY_ITEM_%d=%q\n' "$idx" "${PLAYER_INVENTORY[$idx]}"
+            printf 'PLAYER_INVENTORY_ITEM_%d_B64=%s\n' \
+                "$idx" "$(_save_encode_item "${PLAYER_INVENTORY[$idx]}")"
         done
-
-        # Legacy fallback zostawiamy dla zgodności ze starszym odczytem.
-        printf 'PLAYER_INVENTORY=%s\n' "${PLAYER_INVENTORY[*]:-}"
     } > "$SAVE_FILE"
 
     printf "  %b✔ Game saved.%b\n" "${COLOR_SUCCESS:-}" "${RESET:-}"
@@ -44,11 +88,21 @@ load_game() {
     local key value
     local inventory_count=""
     local found_new_inventory_format=false
+    local legacy_inventory_value=""
+    local legacy_detected=false
+    local idx
+    local decoded_item
+    local required_key
+    local migration_needed=false
+    local missing_required=false
+    local keys_blob=""
     PLAYER_INVENTORY=()
 
     while IFS='=' read -r key value; do
         [[ "$key" =~ ^# ]] && continue
         [[ -z "$key" ]] && continue
+        keys_blob+=$'\n'"$key"$'\n'
+
         case "$key" in
             PLAYER_NAME)      PLAYER_NAME="$value" ;;
             PLAYER_LEVEL)     PLAYER_LEVEL="$value" ;;
@@ -69,22 +123,45 @@ load_game() {
                 inventory_count="$value"
                 found_new_inventory_format=true
                 ;;
-            PLAYER_INVENTORY_ITEM_*)
-                # Odtwarzamy element przez eval tylko z zapisanego %q.
-                local idx="${key#PLAYER_INVENTORY_ITEM_}"
-                local decoded_item=""
-                eval "decoded_item=${value}"
+            PLAYER_INVENTORY_ITEM_*_B64)
+                idx="${key#PLAYER_INVENTORY_ITEM_}"
+                idx="${idx%_B64}"
+                decoded_item="$(_save_decode_item "$value" 2>/dev/null)" || return 1
                 PLAYER_INVENTORY[$idx]="$decoded_item"
                 found_new_inventory_format=true
                 ;;
             PLAYER_INVENTORY)
-                # Fallback dla starych zapisów bez nowego formatu.
-                if [[ "$found_new_inventory_format" == "false" && -n "$value" ]]; then
-                    read -r -a PLAYER_INVENTORY <<< "$value"
-                fi
+                # Stary format: wszystkie przedmioty w jednej linii rozdzielone spacją.
+                # Zachowujemy kompatybilność i po wczytaniu wykonujemy migrację do V2.
+                legacy_inventory_value="$value"
+                legacy_detected=true
                 ;;
         esac
     done < "$SAVE_FILE"
+
+    # Walidacja integralności: wymagamy minimalnego zestawu kluczy.
+    for required_key in "${SAVE_REQUIRED_KEYS[@]}"; do
+        if [[ "$keys_blob" != *$'\n'"$required_key"$'\n'* ]]; then
+            missing_required=true
+            break
+        fi
+    done
+    if [[ "$missing_required" == "true" ]]; then
+        printf "  %b✘ Save file is incomplete or corrupted.%b\n" "${COLOR_ERROR:-}" "${RESET:-}" >&2
+        return 1
+    fi
+
+    # Odtwarzanie ekwipunku ze starego formatu (legacy).
+    # Uwaga: historycznie format tracił informacje o spacjach, więc odzyskujemy
+    # dane "best effort", a następnie zapisujemy już w formacie V2.
+    if [[ "$found_new_inventory_format" == "false" && "$legacy_detected" == "true" ]]; then
+        if [[ -n "$legacy_inventory_value" ]]; then
+            read -r -a PLAYER_INVENTORY <<< "$legacy_inventory_value"
+        else
+            PLAYER_INVENTORY=()
+        fi
+        migration_needed=true
+    fi
 
     # Sanitization: uzupełniamy luki po indeksach, jeśli plik był edytowany ręcznie.
     if [[ "$found_new_inventory_format" == "true" && -n "$inventory_count" ]]; then
@@ -96,6 +173,12 @@ load_game() {
             fi
         done
         PLAYER_INVENTORY=("${normalized[@]}")
+    fi
+
+    # Automatyczna migracja:
+    # jeżeli wykryto stary format, zapisujemy od razu w nowym i jednoznacznym.
+    if [[ "$migration_needed" == "true" ]]; then
+        save_game
     fi
 
     return 0
